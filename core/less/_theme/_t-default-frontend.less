@@ -1,0 +1,532 @@
+/**
+ * Description of Default Template/Theme 
+ *
+ * @copyright : Samet Tarim
+ * @author    : Samet Tarim aka prod3v3loper
+ * @link      : https://www.prod3v3loper.com/
+ */
+#mb-nav {
+
+    position: fixed;
+    top: 0;
+    width: 100%;
+    min-height: 50px;
+    max-height: 50px;
+    z-index: 10;
+    padding: 0;
+    background-color: #fff;
+
+    .mb-nav--brand {
+
+        display: block;
+        float: left;
+        padding: 10px 20px;
+        line-height: 33px;
+        .font-size(1rem, 1.1rem, 1.1rem);
+        font-weight: 100;
+        color: #777;
+        text-decoration: none;
+    }
+
+    .mb-nav--show, 
+    .mb-nav--hide {
+
+        position: absolute;
+        padding: .01em;
+        top: -3px;
+        right: 0;
+
+        .transition(all .2s ease);
+
+        span {
+
+            position: absolute;
+            top: .8em;
+            display: block;
+            content: '';
+            height: .04em;
+            width: 1em;
+            border-radius: .04em;
+            background: #000;
+            cursor: pointer;
+
+            .transition(all .4s ease-in-out 0s);
+
+            &::before {
+
+                position: absolute;
+                display: block;
+                content: '';
+                top: -.3em;
+                height: .04em;
+                width: 1em;
+                border-radius: .04em;
+                background: #000;
+                cursor: pointer;
+
+                .transition(all .4s ease-in-out 0s);
+            }
+
+            &::after {
+
+                position: absolute;
+                display: block;
+                content: '';
+                bottom: -.3em;
+                height: .04em;
+                width: 1em;
+                border-radius: .04em;
+                background: #000;
+                cursor: pointer;
+
+                .transition(all .4s ease-in-out 0s);
+            }
+        }
+    }
+
+    .mb-nav--mobile-btn {
+
+        float: left;
+        width: 1.5em;
+        height: 1.5em;
+        padding: .3em;
+        font-size: 2.2rem;
+        text-decoration: none;
+        color: #000;
+
+        &.mb-nav--show {
+
+            visibility: visible;
+        }
+
+        &.mb-nav--hide {
+
+            visibility: hidden;
+        }
+    }
+
+    .mb-nav--inner {
+
+        min-height: 50px;
+    }
+
+    .mb-nav--list {
+
+        overflow: hidden;
+        display: block;
+        position: absolute;
+        top: 50px;
+
+        z-index: 3;
+
+        width: 100%;
+        max-height: 0;
+        padding: 0;
+        margin: 0;
+
+        background-color: #fff;
+
+        li {
+
+            list-style: none;
+
+            a {
+
+                display: block;
+                padding: .7em;
+                color: #333;
+                font-size: 1.1rem;
+                text-decoration: none;
+            }
+        }
+
+        .mb-nav--bar {
+
+            padding: 0;
+            margin: 0;
+
+            .mb-nav--active {
+
+                a {
+
+                    color: #fff;
+                    .transition(all .2s ease);
+                }
+            }
+
+            li {
+
+                list-style: none;
+
+                a {
+
+                    display: block;
+                    padding: .7em;
+                    color: #333;
+                    font-size: 1.1rem;
+                    text-decoration: none;
+
+                    &:hover {
+
+                        color: #fff;
+                    }
+                }
+
+                .mb-nav--submenu-ads {
+
+                    display: none;
+                }
+            }
+        }
+    }
+}
+
+/* This works when #mb-nav is on the URL - Example: http://domain.com/#mb-nav */
+#mb-nav:target {
+
+    .mb-nav--list {
+
+        position: fixed;
+        overflow-y: scroll;
+        display: block;
+        z-index: 9;
+        max-height: 100%;
+        height: 100%;
+
+        .box-shadow(0 0 .1em 0 #eee inset);
+        .transition(height .2s ease);
+    }
+
+    .mb-nav--mobile-btn {
+
+        &.mb-nav--show {
+            visibility: hidden;
+        }
+
+        &.mb-nav--hide {
+            visibility: visible;
+        }
+
+        &.mb-nav--hide, 
+        &.mb-nav--show {
+            span {
+
+                background-color: transparent;
+
+                &::before {
+
+                    top: 0;
+                    .rotate(45deg);
+                }
+
+                &::after {
+
+                    top: 0;
+                    .rotate(-45deg);
+                }
+            }
+        }
+    }
+}
+
+@media @mq-m-min {
+
+    #mb-nav {
+
+        width: 100%;
+        margin: 0;
+        min-height: 57px;
+
+        .box-sizing();
+
+        .mb-nav--show, .mb-nav--hide {
+
+            display: none;
+        }
+
+        .mb-nav--inner {
+
+            min-height: 57px;
+            .box-shadow(1px 0 3px 0 #333);
+        }
+
+        .mb-nav--list {
+
+            overflow: visible;
+            display: block;
+            position: absolute;
+            top: 0;
+
+            z-index: 6;
+
+            width: 100%;
+            margin: 0;
+        }
+
+        .mb-nav--brand {
+
+            position: absolute;
+            display: inline-block;
+            width: 30%;
+            min-height: 57px;
+            padding: 10px 20px;
+            margin: 0;
+            z-index: 7;
+            line-height: 37px;
+            .font-size(1.2rem, 3rem, 4rem, 5rem, 5rem, 6rem);
+            color: #777;
+        }
+
+        .mb-nav--navbar {
+
+            position: absolute;
+            display: inline-block;
+            width: 100%;
+            min-height: 57px;
+            margin: 0 10px 0 0;
+            padding-left: 30%;
+            z-index: 6;
+            list-style: outside none none;
+
+            .mb-nav--navbar-item {
+
+                display: inline-block;
+                max-height: 57px;
+                line-height: 130%;
+
+                a {
+
+                    display: inline-block;
+                    min-height: 57px;
+                    float: none;
+                    padding: 18px 15px;
+                    color: #777;
+                    line-height: 130%;
+                    text-decoration: none;
+
+                    &:hover ~ ul {
+
+                        visibility: visible;
+                        top: 57px;
+                        opacity: 1;
+                        .transition(all .4s ease);
+                    }
+
+                    &.mb-nav--active {
+
+                        color: #555;
+                        text-decoration: none;
+                        background-color: rgba(0,0,0,.1);
+
+                        .transition(all .2s ease);
+                    }
+                }
+
+                .mb-nav--navbar-subnav {
+
+                    position: absolute;
+                    top: 77px;
+                    left: 0;
+                    visibility: hidden;
+                    width: 100%;
+                    padding: 0 20%;
+                    margin: 0;
+                    z-index: 1;
+                    background-color: #fff;
+                    opacity: 0;
+
+                    .box-shadow(1px 0 3px 0 #333);
+                    .transition(all .4s ease);
+
+                    &:hover {
+
+                        opacity: 1;
+                        top: 57px;
+                        visibility: visible;
+                    }
+
+                    .mb-nav--navbar-subnav-item {
+
+                        display: inline-block;
+                        min-height: 57px;
+                        height: 57px;
+                    }
+                }
+            }
+        }
+
+        input[type="text"] {
+
+            margin-bottom: 0;
+        }
+
+        .mb-nav--search {
+
+            padding: 4px 14px;
+            margin-bottom: 0px;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 13px;
+            font-weight: normal;
+            line-height: 1;
+            border-radius: 15px;
+        }
+    }
+}
+
+/* ************** *
+ *      HEAD
+ * ************** */
+.mb-header {
+
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: 300px;
+    margin: 50px 0 0 0;
+
+    .mb-header--title {
+
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+
+        z-index: 7;
+
+        padding: 20px;
+
+        .font-size(3rem, 4rem, 5rem, 6rem);
+        font-weight: 500;
+        color: #fff;
+        text-align: center;
+        text-shadow: 1px 0 3px #333;
+        transform: translate(0%,-50%);
+        top: 50%;
+    }
+
+    .mb-header--overlay {
+
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 6;
+        width: 100%;
+        min-width: 100%;
+        height: 100%;
+        min-height: 100%;
+        background-color: rgba(0,0,0,.4);
+
+        .box-shadow(1px 0 3px 0 #333 inset);
+    }
+
+    .mb-header--wrapimg {
+
+        height: 300px;
+
+        .mb-header--img {
+
+            width: 100%;
+            height: 100%;
+
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: cover;
+        }
+    }
+}
+
+@media @mq-m-min {
+
+    .mb-header {
+
+        margin: 57px 0 0 0;
+    }
+} 
+
+/* ************** *
+ *      WRAP
+ * ************** */
+.mb-wrap {
+
+    width: 80%;
+    margin: 0 auto;
+    overflow: hidden;
+
+    /* ************** *
+     *      MAIN
+     * ************** */
+    .mb-main {
+
+        padding: 20px 20px 20px 0px;
+
+        .mb-article {
+
+            margin: 2em auto;
+
+            .mb-article--title {
+
+                margin: .5em auto;
+            }
+        }
+    }
+
+    /* ************** *
+     *      ASIDE
+     * ************** */
+    .mb-aside {
+
+        padding: 20px 0px;
+
+        .mb-section {
+
+            margin: 2em auto;
+
+            &:first-of-type {
+
+                margin-top: 0em;
+            }
+        }
+    }
+}
+
+/* ************** *
+ *      FOOT
+ * ************** */
+.mb-footer {
+
+    margin: 0;
+    padding: 20px 0px;
+    border-top: 1px solid rgba(0,0,0,.03);
+
+    p {
+
+        font-size: 1rem;
+    }
+}
+
+.maa-copy {
+
+    border-top: 1px solid @bd-default;
+
+    &:nth-of-type(1) {
+        margin-left: 0;
+    }
+
+    &:nth-of-type(2) {
+        text-align: right;
+        margin-right: 0;
+    }
+
+    p {
+        font-size: .9rem;
+    }
+}
+
+.mb-anker--form-login {
+
+    &:before {
+
+        content: "\f13d";
+        font-size: 2rem;
+    }
+}
