@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * If debug true in settings
+ */
 if (DEBUG) {
     // Overwrite ini settings debug
     ini_set('html_errors', 1);

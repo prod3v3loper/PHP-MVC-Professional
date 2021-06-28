@@ -12,7 +12,8 @@ require_once 'com.php';
 // Use frontcontroller
 use Controller\FrontController as FC;
 
-// Instance frontcontroller
+// Instance frontcontroller with our document root path
 $fc = new FC(DOCUMENT_ROOT);
+
 // And run
 $fc->run();
