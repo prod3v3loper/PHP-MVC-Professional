@@ -6,8 +6,8 @@ foreach (glob('./core/func' . DIRECTORY_SEPARATOR . '*.php') as $core_func_file)
 }
 
 // Load files
-require_once './root.php';
 require_once './settings.php';
+require_once './root.php';
 require_once './autoload/src/Loader.php';
 
 // Instance autoloader
