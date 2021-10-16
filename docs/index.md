@@ -1,37 +1,46 @@
-## Welcome to GitHub Pages
+# PHP MVC Pro
 
-You can use the [editor on GitHub](https://github.com/prod3v3loper/php-mvc-professional/edit/main/docs/index.md) to maintain and preview the content for your website in Markdown files.
+**Model View Controller** Pro to bring the way closer.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+This MVC has a good structure, with a example validation yourself in the Model. 
+We represent a database table with each of our models to save, get data etc. we use model repository and we can also write a validation to validate data.
 
-### Markdown
+In this environment there are some examples from other projects that I have already presented, e.g. the layout with less.
+You can use whatever tool you want to minify your css, you don't have to use this design. Exactly the same goes for javascript, I didn't add much more.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+Change the data in the **settings.php**:
+```
+define('DB_PREFIX', 'w_');
+define('DB_HOST', 'localhost');
+define('DB_PORT', '3306');
+define('DB_NAME', 'dbname');
+define('DB_DSN', 'mysql:host=' . DB_HOST . ':' . DB_PORT . ';dbname=' . DB_NAME);
+define('DB_USER', 'root');
+define('DB_PASS', 'password');
 
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+// Debug
+define('DEBUG', true);
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+# Attention
 
-### Jekyll Themes
+This one should not use in a real environment but unfortunately there is also something in real environments.
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/prod3v3loper/php-mvc-professional/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+# Contribute
 
-### Support or Contact
+Please an [issue](https://github.com/prod3v3loper/php-mvc-professional/issues) if you
+think something could be improved. Please submit Pull Requests when ever
+possible.
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+# Authors
+
+**[Samet Tarim](https://www.prod3v3loper.com)** - *All works*
+
+# Supporter
+
+[Tnado](https://www.tnado.com/blog/)
+[Hyperly](https://www.hyperly.de)
+
+# License
+
+[MIT](https://github.com/prod3v3loper/php-mvc-professional/blob/master/LICENSE) - [prod3v3loper](https://www.tnado.com/author/prod3v3loper/)
