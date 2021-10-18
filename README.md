@@ -1,19 +1,25 @@
 # 🏗 PHP MVC Professional
 
-**Model View Controller**
-
-To bring the way closer.
+> Model View Controller
 
 I have already released two versions and this would be where you could build.
 If you want, have a look at the other versions:
 
-https://github.com/prod3v3loper/php-mvc-beginner
+- https://github.com/prod3v3loper/php-mvc-beginner
+- https://github.com/prod3v3loper/php-mvc-advanced
 
-https://github.com/prod3v3loper/php-mvc-advanced
+And other stuff from me:
+
+- https://github.com/prod3v3loper/less-mixins
+- https://github.com/prod3v3loper/css-grid
+- https://github.com/prod3v3loper/php-auto-autoloader
 
 # Idea
 
-MVC has a clear and understandable structure
+MVC has a clear and understandable structure. A basic framework for smaller or larger projects.
+Working with it should be easy and understandable, which is why most of the names are named accordingly.
+
+At the moment there is (further information will follow):
 
 - The Model View and Controller folders are named in the same way.
 - Everything that is still needed is in core templates, less, javascript etc.
@@ -103,7 +109,6 @@ define('DB_PASS', 'password');
 ## Debug
 
 ```
-// Debug
 define('DEBUG', true);
 ```
 
