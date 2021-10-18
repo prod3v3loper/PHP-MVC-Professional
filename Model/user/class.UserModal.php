@@ -5,22 +5,24 @@ namespace Modal\user;
 /**
  * Description of User Modal
  * 
- * @author      Samet Tarim
- * @copyright   (c) 2019, Samet Tarim
+ * @author      prod3v3loper
+ * @copyright   (c) 2021, Samet Tarim
  * @link        https://www.prod3v3loper.com
  * @package     melabuai
  * @subpackage  mvc
  * @version     1.0
  * @since       1.0
  */
-class UserModal extends UserValidator {
+class UserModal extends UserValidator
+{
 
     /**
      * 
      * @param type $db
      * @param type $class
      */
-    public static function init($db = "user", $class = "\User") {
+    public static function init($db = "user", $class = "\User")
+    {
 
         if (defined('DB_PREFIX')) {
             self::$TABLE = DB_PREFIX . $db; // Database table
@@ -32,7 +34,8 @@ class UserModal extends UserValidator {
      * SAVE - handels insert and update
      * @return type Boolean
      */
-    public function saveObject() {
+    public function saveObject()
+    {
 
         if ($this->ID == 0) {
             $return = $this->insert();
@@ -46,7 +49,8 @@ class UserModal extends UserValidator {
      * REMOVE
      * @return type
      */
-    public function remove() {
+    public function remove()
+    {
 
         if ($this->ID > 0) {
             $return = $this->delete();
@@ -58,12 +62,13 @@ class UserModal extends UserValidator {
      * CREATE
      * @return boolean
      */
-    private function insert() {
+    private function insert()
+    {
 
         self::init();
         $return = false;
         if ($this->isOK()) {
-            $sql = "INSERT INTO `" . self::$TABLE . "` (`firstname`,`lastname`,`name`,`email`,`password`,`oldPassword`,`meta`,`role`,`accept`,`oauth`,`created`,`updated`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+            $sql = "INSERT INTO `" . self::$TABLE . "` (`firstname`,`lastname`,`name`,`email`,`password`,`oldPassword`,`meta`,`role`,`accept`,`created`,`updated`) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
             $stmt = self::$DBH->prepare($sql);
             $stmt->execute(array(
                 $this->firstname,
@@ -75,7 +80,6 @@ class UserModal extends UserValidator {
                 $this->meta,
                 $this->role,
                 $this->accept,
-                $this->oauth,
                 time(),
                 time()
             ));
@@ -88,13 +92,14 @@ class UserModal extends UserValidator {
      * UPDATE
      * @return boolean
      */
-    private function update() {
+    private function update()
+    {
 
         self::init();
         $return = false;
-        
+
         if ($this->isOK()) {
-            $sql = "UPDATE `" . self::$TABLE . "` SET `firstname` = ?, `lastname` = ?, `name` = ?, `email` = ?, `meta` = ?, `role` = ?, `accept` = ?, `oauth` = ?, `updated` = ? WHERE `ID` = ?";
+            $sql = "UPDATE `" . self::$TABLE . "` SET `firstname` = ?, `lastname` = ?, `name` = ?, `email` = ?, `meta` = ?, `role` = ?, `accept` = ?, `updated` = ? WHERE `ID` = ?";
             $stmt = self::$DBH->prepare($sql);
             $stmt->execute(array(
                 $this->firstname,
@@ -104,7 +109,6 @@ class UserModal extends UserValidator {
                 $this->meta,
                 $this->role,
                 $this->accept,
-                $this->oauth,
                 time(),
                 $this->ID,
             ));
@@ -117,7 +121,8 @@ class UserModal extends UserValidator {
      * DELETE
      * @return boolean
      */
-    private function delete() {
+    private function delete()
+    {
 
         self::init();
         $return = false;
@@ -134,29 +139,27 @@ class UserModal extends UserValidator {
 
     // READ
 
-    public static function find($order = '', $type = '') {
+    public static function find($order = '', $type = '')
+    {
         self::init();
         return parent::find($order, $type);
     }
 
-    public static function findAll($order = '', $type = '') {
+    public static function findAll($order = '', $type = '')
+    {
         self::init();
         return parent::findAll($order, $type);
     }
 
-    public static function findById($id) {
+    public static function findById($id)
+    {
         self::init();
         return parent::findById($id);
     }
 
-    public static function findByName($name) {
+    public static function findByName($name)
+    {
         self::init();
         return parent::findByName($name);
     }
-
-    public static function findByAttribute($set, $attr, $sign = '*') {
-        self::init();
-        return parent::findByAttribute($set, $attr, $sign);
-    }
-
 }

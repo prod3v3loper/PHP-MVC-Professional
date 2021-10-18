@@ -7,15 +7,16 @@ namespace Modal;
  * 
  * This class hold the validate helpers for the validators.
  * 
- * @author      Samet Tarim
- * @copyright   (c) 2019, Samet Tarim
+ * @author      prod3v3loper
+ * @copyright   (c) 2021, Samet Tarim
  * @link        https://www.prod3v3loper.com
  * @package     melabuai
  * @subpackage  mvc
  * @version     1.0
  * @since       1.0
  */
-class Validator extends ValidatorAbstract {
+class Validator extends ValidatorAbstract
+{
 
     /**
      * Hold the errors for validation and more classes
@@ -32,13 +33,14 @@ class Validator extends ValidatorAbstract {
     /**
      * This function set validate for POST fields and call the validate function
      */
-    public function validateByArray(array $data) {
+    public function validateByArray(array $data)
+    {
 
         if ($data) {
             foreach ($data as $key => $val) {
 
                 $validate = 'validate' . ucfirst($key);
-//                _evd($validate);
+                //                _evd($validate);
                 /**
                  * Check if method exists in this classes
                  * @see http://php.net/manual/en/function.method-exists.php
@@ -56,7 +58,8 @@ class Validator extends ValidatorAbstract {
      * @param type $regex
      * @return type
      */
-    protected function filterRegex($value, $regex) {
+    protected function filterRegex($value, $regex)
+    {
 
         return filter_var($value, FILTER_VALIDATE_REGEXP, array(
             'options' => array('regexp' => $regex)
@@ -67,7 +70,8 @@ class Validator extends ValidatorAbstract {
      * This function add the success messages
      * @param type
      */
-    public function addSuccess($success) {
+    public function addSuccess($success)
+    {
 
         $this->successes[] = $success;
     }
@@ -76,7 +80,8 @@ class Validator extends ValidatorAbstract {
      * This function returns the success messages
      * @return type
      */
-    public function getSuccess() {
+    public function getSuccess()
+    {
 
         return $this->successes;
     }
@@ -85,7 +90,8 @@ class Validator extends ValidatorAbstract {
      * This function add the error messages
      * @param type
      */
-    public function addError($error, $key = '') {
+    public function addError($error, $key = '')
+    {
         if ($key) {
             $this->errors[$key][] = $error;
         } else {
@@ -97,7 +103,8 @@ class Validator extends ValidatorAbstract {
      * This function returns the error messages
      * @return array
      */
-    public function getErrors() {
+    public function getErrors()
+    {
 
         return $this->errors;
     }
@@ -107,9 +114,9 @@ class Validator extends ValidatorAbstract {
      * Is empty returns TRUE if not empty return FALSE
      * @return type
      */
-    public function isValid() {
+    public function isValid()
+    {
 
         return empty($this->errors);
     }
-
 }

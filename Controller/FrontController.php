@@ -3,18 +3,20 @@
 namespace Controller;
 
 /**
- * Description of frontController
+ * Description of FrontController
  * 
- * Simple frontcontroller
+ * Simple FrontController
  *
- * @author      Samet Tarim
- * @copyright   (c) 2019, Samet Tarim
+ * @author      prod3v3loper
+ * @copyright   (c) 2021, Samet Tarim
+ * @link        https://www.prod3v3loper.com
  * @package     melabuai
  * @subpackage  mvc
  * @version     1.0
  * @since       1.0
  */
-class FrontController extends ErrorController {
+class FrontController extends ErrorController
+{
 
     // Defaults, if not specified
     const DEFAULT_CONTROLLER = "Controller\IndexController";
@@ -22,46 +24,46 @@ class FrontController extends ErrorController {
 
     /**
      *
-     * @var type string
+     * @var String
      */
     private $controller = self::DEFAULT_CONTROLLER;
 
     /**
      *
-     * @var type string
+     * @var String
      */
     private $action = self::DEFAULT_ACTION;
 
     /**
      *
-     * @var type string
+     * @var String
      */
     private $basePath = "";
 
     /**
      *
-     * @var type array
+     * @var Array
      */
     protected $params = array();
 
     /**
      *
-     * @var type array
+     * @var Array
      */
     protected $parts = array();
 
     /**
      *
-     * @var type integer
+     * @var Integer
      */
     protected $partsCount = 0;
 
     /**
      * 
-     * @param type string $path
+     * @param String $path
      */
-    public function __construct($path = '') {
-
+    public function __construct($path = '')
+    {
         $this->basePath = $path;
         $this->parseURL();
     }
@@ -70,8 +72,8 @@ class FrontController extends ErrorController {
      * Here we get and check the URL that was called by the user.
      * If there is no controller with a method that was called via the url, we can prevent this call from taking place
      */
-    private function parseURL() {
-
+    private function parseURL()
+    {
         // Get URL
         $path = trim(filter_input(INPUT_SERVER, "REQUEST_URI"), "/");
 
@@ -90,7 +92,7 @@ class FrontController extends ErrorController {
         if ($part[0] == "index") {
             header("Location: " . PROJECT_HTTP_ROOT . DIRECTORY_SEPARATOR);
         }
-        
+
         // Loop parsed Query
         for ($i = 0; $i < $this->partsCount; $i++) {
             // Only for the index path
@@ -109,43 +111,47 @@ class FrontController extends ErrorController {
 
     /**
      * 
-     * @return type string
+     * @return String
      */
-    public function getController() {
+    public function getController()
+    {
         return $this->controller;
     }
 
     /**
      * 
-     * @return type string
+     * @return String
      */
-    public function getAction() {
+    public function getAction()
+    {
         return $this->action;
     }
 
     /**
      * Returns the current Params
-     * @return type array
+     * @return Array
      */
-    public function getParams() {
+    public function getParams()
+    {
         return array_filter($this->params);
     }
 
     /**
      * 
-     * @return type string
+     * @return String
      */
-    public function getBasePath() {
+    public function getBasePath()
+    {
         return $this->basePath;
     }
 
     /**
      * Check and set the Controller class
      * 
-     * @param string $controller
+     * @param String $controller
      */
-    private function setController($controller) {
-
+    private function setController($controller)
+    {
         // Create controller
         $controller = __NAMESPACE__ . "\\" . ucfirst(strtolower($controller)) . "Controller";
         // Does this class exist
@@ -159,10 +165,10 @@ class FrontController extends ErrorController {
     /**
      * Check and set the Action for the class Method
      * 
-     * @param string $action
+     * @param String $action
      */
-    private function setAction($action) {
-
+    private function setAction($action)
+    {
         // Create action method
         $method = strtolower($action) . "Action";
         // Classes runner
@@ -179,11 +185,11 @@ class FrontController extends ErrorController {
     /**
      * Set params for controller class and action method
      * 
-     * @param type string $params
-     * @param type string $part
+     * @param String $params
+     * @param String $part
      */
-    protected function setParams($params, $part = '') {
-
+    protected function setParams($params, $part = '')
+    {
         if ($part) {
             $this->params[$part][] = $params;
         } else {
@@ -193,23 +199,23 @@ class FrontController extends ErrorController {
 
     /**
      * 
-     * @param type string $basePath
+     * @param String $basePath
      */
-    private function setBasePath($basePath) {
-
+    private function setBasePath($basePath)
+    {
         $this->basePath = $basePath;
     }
 
     /**
      * Run class with method and params
      */
-    public function run() {
+    public function run()
+    {
 
-//        var_dump($this->controller);
-//        var_dump($this->action);
-//        var_dump($this->partsCount);
-//        var_dump($this->params);
+        //        var_dump($this->controller);
+        //        var_dump($this->action);
+        //        var_dump($this->partsCount);
+        //        var_dump($this->params);
         call_user_func_array(array(new $this->controller, $this->action), array($this->params));
     }
-
 }

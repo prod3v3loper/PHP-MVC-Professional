@@ -2,7 +2,6 @@
 
 namespace Modal;
 
-use core\interfaces\modal\ModalEngine;
 use System\DB\DBM;
 
 /**
@@ -10,15 +9,16 @@ use System\DB\DBM;
  * 
  * The modal is connected to every other modal and automatically pulls the database table and the class entity.
  * 
- * @author      Samet Tarim
- * @copyright   (c) 2019, Samet Tarim
+ * @author      prod3v3loper
+ * @copyright   (c) 2021, Samet Tarim
  * @link        https://www.prod3v3loper.com
  * @package     melabuai
  * @subpackage  mvc
  * @version     1.0
  * @since       1.0
  */
-class Modal extends ModalAbstract implements ModalEngine {
+class Modal extends ModalAbstract
+{
 
     /**
      * Database object
@@ -41,18 +41,21 @@ class Modal extends ModalAbstract implements ModalEngine {
     /**
      * Constructor
      */
-    public function __construct() {
+    public function __construct()
+    {
         //..
     }
 
     /**
      * Block clone
      */
-    public function __clone() {
+    public function __clone()
+    {
         //..
     }
 
-    public static function init() {
+    public static function init()
+    {
         // Here we need the object not the DB connection
         self::$DBH = (isset($GLOBALS['DBM_PDO_INST']) ? $GLOBALS['DBM_PDO_INST'] : null);
     }
@@ -61,7 +64,8 @@ class Modal extends ModalAbstract implements ModalEngine {
      * 
      * @return boolean
      */
-    public function isOK() {
+    public function isOK()
+    {
         $return = false;
         if (self::$DBH && self::$TABLE) {
             $return = true;
@@ -77,7 +81,8 @@ class Modal extends ModalAbstract implements ModalEngine {
      * @param type $order (string)
      * @return type
      */
-    public static function find($order = '', $type = '') {
+    public static function find($order = '', $type = '')
+    {
 
         $return = false;
         self::init();
@@ -104,7 +109,8 @@ class Modal extends ModalAbstract implements ModalEngine {
      * @param type $order (string)
      * @return type 
      */
-    public static function findAll($order = '', $type = '') {
+    public static function findAll($order = '', $type = '')
+    {
 
         $return = false;
         self::init();
@@ -131,7 +137,8 @@ class Modal extends ModalAbstract implements ModalEngine {
      * @param type $id (int)
      * @return type
      */
-    public static function findById($id) {
+    public static function findById($id)
+    {
 
         $return = false;
         self::init();
@@ -157,7 +164,8 @@ class Modal extends ModalAbstract implements ModalEngine {
      * @param type $title (string)
      * @return type
      */
-    public static function findByTitle($title) {
+    public static function findByTitle($title)
+    {
 
         $return = false;
         self::init();
@@ -182,7 +190,8 @@ class Modal extends ModalAbstract implements ModalEngine {
      * @param type $name (string)
      * @return type
      */
-    public static function findByName($name) {
+    public static function findByName($name)
+    {
 
         $return = false;
         self::init();
@@ -198,5 +207,4 @@ class Modal extends ModalAbstract implements ModalEngine {
         }
         return $return;
     }
-
 }

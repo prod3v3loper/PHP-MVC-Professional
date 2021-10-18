@@ -7,24 +7,26 @@ namespace Controller;
  * 
  * Example usage of other function for all controllers have this class extends
  *
- * @author      Samet Tarim
- * @copyright   (c) 2019, Samet Tarim
+ * @author      prod3v3loper
+ * @copyright   (c) 2021, Samet Tarim
+ * @link        https://www.prod3v3loper.com
  * @package     melabuai
  * @subpackage  mvc
  * @version     1.0
  * @since       1.0
  */
-abstract class AbstractController {
-    
-//    static protected $entityManager;
-//    
-//    /**
-//     * The entitymanager example
-//     * 
-//     * @param type object $entityManager
-//     */
-//    static function setEntityManager($entityManager) {
-//        
-//        self::$entityManager = $entityManager;
-//    }
+abstract class AbstractController
+{
+
+    //    static protected $entityManager;
+    //    
+    //    /**
+    //     * The entitymanager example
+    //     * 
+    //     * @param type object $entityManager
+    //     */
+    //    static function setEntityManager($entityManager) {
+    //        
+    //        self::$entityManager = $entityManager;
+    //    }
 }

@@ -10,16 +10,16 @@ namespace System\DB;
  * Singleton DB
  * Objects are always passed in references
  * 
- * @author      Samet Tarim
- * @copyright   (c) 2019, Samet Tarim
+ * @author      prod3v3loper
+ * @copyright   (c) 2021, Samet Tarim
  * @link        https://www.prod3v3loper.com
  * @package     melabuai
  * @subpackage  mvc
  * @version     1.0
  * @since       1.0
  */
-class DBM {
-
+class DBM
+{
     /**
      * Record instance of the database
      * 
@@ -37,24 +37,24 @@ class DBM {
     /**
      * Constructor init
      */
-    private function __construct() {
-
+    private function __construct()
+    {
         $this->init();
     }
 
     /**
      * Prevent db clone
      */
-    private function __clone() {
-
+    private function __clone()
+    {
         //..
     }
 
     /**
      * Initiate the db
      */
-    private function init() {
-
+    private function init()
+    {
         // PDO options
         $DB_OPTIONS = array(
             \PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
@@ -81,25 +81,24 @@ class DBM {
                                 meta TEXT NOT NULL, 
                                 role TINYINT(1) NOT NULL, 
                                 accept TINYINT(1) NOT NULL, 
-                                oauth VARCHAR(100) NOT NULL, 
                                 created INT(11) NOT NULL, 
                                 updated INT(11) NOT NULL
                             ) ENGINE=MyISAM  DEFAULT CHARSET=utf8";
 
             $stmt = $this->DBH->prepare($createTable);
             if (!$stmt->execute()) {
-//                $stmt->errorInfo();
+                //                $stmt->errorInfo();
             }
-            
+
             // Creat more project tables
-            
+
         } catch (\PDOException $e) {
 
             // Catch errors
             echo '<div style="color:red;">'
-            . '<pre>' . $e . '</pre>'
-            . '</div>';
-            
+                . '<pre>' . $e . '</pre>'
+                . '</div>';
+
             // Error handling (e.g. email to admin)
             die();
         }
@@ -110,8 +109,8 @@ class DBM {
      * 
      * @return type object
      */
-    static public function get_instance() {
-
+    static public function get_instance()
+    {
         if (null === self::$instance) {
             self::$instance = new self();
         }
@@ -123,9 +122,8 @@ class DBM {
      * 
      * @return type object
      */
-    public function get_connection() {
-
+    public function get_connection()
+    {
         return $this->DBH;
     }
-
 }

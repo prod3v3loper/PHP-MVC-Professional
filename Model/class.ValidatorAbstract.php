@@ -5,15 +5,16 @@ namespace Modal;
 /**
  * Description of Validator
  *
- * @author      Samet Tarim
- * @copyright   (c) 2019, Samet Tarim
+ * @author      prod3v3loper
+ * @copyright   (c) 2021, Samet Tarim
  * @link        https://www.prod3v3loper.com
  * @package     melabuai
  * @subpackage  mvc
  * @version     1.0
  * @since       1.0
  */
-abstract class ValidatorAbstract extends Modal {
+abstract class ValidatorAbstract extends Modal
+{
 
     /**
      * CSRF - Cross Site Scripting Protect
@@ -25,7 +26,8 @@ abstract class ValidatorAbstract extends Modal {
      * This function set the CSRF token
      * @param type
      */
-    public function setCsrfToken($timer = false, $time = (+(0))) {
+    public function setCsrfToken($timer = false, $time = (+ (0)))
+    {
 
         mt_srand(microtime(true));
 
@@ -36,7 +38,7 @@ abstract class ValidatorAbstract extends Modal {
             if (true === $timer) {
                 $_SESSION['csrf-time'] = time() . $time;
             }
-            
+
             $this->csrf = md5($_SESSION['csrf-token']);
         }
         //..
@@ -50,8 +52,9 @@ abstract class ValidatorAbstract extends Modal {
      * This function return the CSRF token back
      * @param type
      */
-    public function getCsrfToken() {
-        
+    public function getCsrfToken()
+    {
+
         return md5($_SESSION['csrf-token']);
     }
 
@@ -59,7 +62,8 @@ abstract class ValidatorAbstract extends Modal {
      * This function clean the CSRF token
      * @param type
      */
-    public function cleanCsrfToken() {
+    public function cleanCsrfToken()
+    {
 
         if (isset($_SESSION['csrf-token'])) {
             unset($_SESSION['csrf-token']);
@@ -67,5 +71,4 @@ abstract class ValidatorAbstract extends Modal {
 
         $this->csrf = '';
     }
-
 }

@@ -11,7 +11,7 @@ require_once './root.php';
 require_once './autoload/src/Loader.php';
 
 // Instance autoloader with project document root path
-new \Aautoloder\Loader(array(PROJECT_DOCUMENT_ROOT));
+new Aautoloder\Loader(array(PROJECT_DOCUMENT_ROOT));
 
 // Use database
 use System\DB\DBM;

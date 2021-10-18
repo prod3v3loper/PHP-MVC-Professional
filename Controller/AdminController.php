@@ -8,13 +8,15 @@ use View\FrontView as V;
  * Description of AdminController
  * 
  * @author      prod3v3loper
- * @copyright   (c) 2019, prod3v3loper
+ * @copyright   (c) 2021, Samet Tarim
+ * @link        https://www.prod3v3loper.com
  * @package     melabuai
  * @subpackage  mvc
  * @version     1.0
  * @since       1.0
  */
-class AdminController extends AbstractController {
+class AdminController extends AbstractController
+{
 
     /**
      * This is the first action called on default
@@ -22,17 +24,18 @@ class AdminController extends AbstractController {
      * 
      * @param type $params
      */
-    public function indexAction($params = "") {
-        
+    public function indexAction($params = "")
+    {
+
         // Check if admin logged in && is admin and do what you want
 
         V::addContext('data', array(
             "templates" => array(
-//                "header",
-//                "nav",
+                //                "header",
+                //                "nav",
                 "admin/dashboard",
-//                "home",
-//                "footer"
+                //                "home",
+                //                "footer"
             ),
             "meta-title" => "Login",
             "robots" => "index, follow, noodp",
@@ -45,5 +48,4 @@ class AdminController extends AbstractController {
 
         V::display();
     }
-
 }

@@ -10,13 +10,15 @@ use View\FrontView as V;
  * You can create multiple controllers e.g. for login, admin pages etc.
  *
  * @author      prod3v3loper
- * @copyright   (c) 2019, prod3v3loper
+ * @copyright   (c) 2021, Samet Tarim
+ * @link        https://www.prod3v3loper.com
  * @package     melabuai
  * @subpackage  mvc
  * @version     1.0
  * @since       1.0
  */
-class IndexController extends AbstractController {
+class IndexController extends AbstractController
+{
 
     /**
      * This is the first action called on default
@@ -24,8 +26,9 @@ class IndexController extends AbstractController {
      * 
      * @param type $params
      */
-    public function indexAction($params = "") {
-        
+    public function indexAction($params = "")
+    {
+
         V::addContext('data', array(
             "templates" => array(
                 "header",
@@ -41,14 +44,15 @@ class IndexController extends AbstractController {
             "content" => "<h2>Search Engine Optimization</h2><p>Free Search Engine Optimization tools from tnado take you to the top. Try your site today to optimize on onpage as offpage and much more. With our tools you can check everything without limits.</p>",
             "image" => PROJECT_HTTP_ROOT . DIRECTORY_SEPARATOR . "core/img/home.jpg"
         ));
-        
+
         V::display();
     }
-    
+
     /**
      * 
      */
-    public function aboutAction() {
+    public function aboutAction()
+    {
 
         V::addContext('data', array(
             "templates" => array(
@@ -65,11 +69,12 @@ class IndexController extends AbstractController {
             "content" => "<h2>About</h2><p>TNADO is specializes in SEO & AMP. Our story about SEO programming optimization with background and all that belongs to it can be found here.</p>",
             "image" => PROJECT_HTTP_ROOT . DIRECTORY_SEPARATOR . "core/img/home.jpg"
         ));
-        
+
         V::display();
     }
-    
-    public function blogAction() {
+
+    public function blogAction()
+    {
 
         V::addContext('data', array(
             // On templates you can change all if you want to style another
@@ -87,11 +92,12 @@ class IndexController extends AbstractController {
             "content" => "<h2>Support</h2><p>We provide support and expect support. So if there is any support please contact us or we will support you with our know how.</p>",
             "image" => PROJECT_HTTP_ROOT . DIRECTORY_SEPARATOR . "core/img/home.jpg"
         ));
-        
+
         V::display();
     }
-    
-    public function supportAction() {
+
+    public function supportAction()
+    {
 
         V::addContext('data', array(
             "templates" => array(
@@ -108,11 +114,12 @@ class IndexController extends AbstractController {
             "content" => "<h2>Support</h2><p>We provide support and expect support. So if there is any support please contact us or we will support you with our know how.</p>",
             "image" => PROJECT_HTTP_ROOT . DIRECTORY_SEPARATOR . "core/img/home.jpg"
         ));
-        
+
         V::display();
     }
-    
-    public function contactAction() {
+
+    public function contactAction()
+    {
 
         V::addContext('data', array(
             "templates" => array(
@@ -129,11 +136,12 @@ class IndexController extends AbstractController {
             "content" => "<h2>Contact</h2><p>We love to build connection you too ? Then feel ever free and contact us.</p>",
             "image" => PROJECT_HTTP_ROOT . DIRECTORY_SEPARATOR . "core/img/home.jpg"
         ));
-        
+
         V::display();
     }
-    
-    public function advertisingAction() {
+
+    public function advertisingAction()
+    {
 
         V::addContext('data', array(
             "templates" => array(
@@ -150,11 +158,12 @@ class IndexController extends AbstractController {
             "content" => "<h2>Advertising</h2><p>We can place your Company on the fields.</p>",
             "image" => PROJECT_HTTP_ROOT . DIRECTORY_SEPARATOR . "core/img/home.jpg"
         ));
-        
+
         V::display();
     }
-    
-    public function imprintAction() {
+
+    public function imprintAction()
+    {
 
         V::addContext('data', array(
             "templates" => array(
@@ -166,11 +175,12 @@ class IndexController extends AbstractController {
             "title" => "Imprint",
             "image" => PROJECT_HTTP_ROOT . DIRECTORY_SEPARATOR . "core/img/home.jpg"
         ));
-        
+
         V::display();
     }
-    
-    public function privacyAction() {
+
+    public function privacyAction()
+    {
 
         V::addContext('data', array(
             "templates" => array(
@@ -182,14 +192,15 @@ class IndexController extends AbstractController {
             "title" => "Privacy",
             "image" => PROJECT_HTTP_ROOT . DIRECTORY_SEPARATOR . "core/img/home.jpg"
         ));
-        
+
         V::display();
     }
-    
-    public function errorAction() {
+
+    public function errorAction()
+    {
 
         header("HTTP/1.0 404 Not Found");
-        
+
         V::addContext('data', array(
             "templates" => array(
                 "error",
@@ -198,8 +209,7 @@ class IndexController extends AbstractController {
             "title" => "404 Page not found",
             "description" => "This is the page that appears and does not appear if a page on our server does not exist, but it can lead you back to a working page."
         ));
-        
+
         V::display();
     }
-
 }
