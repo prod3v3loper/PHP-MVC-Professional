@@ -16,31 +16,34 @@ namespace View;
 class FrontView
 {
 
+    /**
+     * @var array $context
+     */
     protected static $context = array();
 
     /**
      * Display template
      * 
-     * @param String $template
+     * @param string $template
      */
-    public static function display($template = "")
+    public static function display(string $template = '')
     {
         extract(self::$context);
 
         if ($template) {
-            require_once $template;
+            require_once PROJECT_DOCUMENT_ROOT . DIRECTORY_SEPARATOR . 'core/tpl/' .$template;
         } else {
-            require_once PROJECT_DOCUMENT_ROOT . DIRECTORY_SEPARATOR . 'core/tpl/default.php';
+            require_once PROJECT_DOCUMENT_ROOT . DIRECTORY_SEPARATOR . 'core/tpl/index.php';
         }
     }
 
     /**
      * Add context to get in template
      * 
-     * @param String $key
-     * @param String $value
+     * @param string $key
+     * @param mixed $value
      */
-    public static function addContext($key, $value)
+    public static function addContext(string $key = '', $value)
     {
         self::$context[$key] = $value;
     }

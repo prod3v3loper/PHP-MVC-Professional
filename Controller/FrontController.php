@@ -2,143 +2,73 @@
 
 namespace Controller;
 
+use core\classes\secure\Mask,
+    core\classes\lang\Lang;
+
 /**
  * Description of FrontController
- * 
- * Simple FrontController
  *
  * @author      prod3v3loper
- * @copyright   (c) 2021, Samet Tarim
+ * @copyright   (c) 2022, Samet Tarim
  * @link        https://www.prod3v3loper.com
  * @package     melabuai
  * @subpackage  mvc
  * @version     1.0
  * @since       1.0
  */
-class FrontController extends ErrorController
+class FrontController extends AbstractController
 {
-
-    // Defaults, if not specified
     const DEFAULT_CONTROLLER = "Controller\IndexController";
+
     const DEFAULT_ACTION = "indexAction";
+
+    const ERROR_CONTROLLER = 'Controller\ErrorController';
+
+    const ERROR_ACTION = 'error404Action';
 
     /**
      *
-     * @var String
+     * @var string $controller
      */
     private $controller = self::DEFAULT_CONTROLLER;
 
     /**
      *
-     * @var String
+     * @var string $action
      */
     private $action = self::DEFAULT_ACTION;
 
     /**
      *
-     * @var String
+     * @var string $basePath
      */
-    private $basePath = "";
+    private $basePath = '';
 
     /**
      *
-     * @var Array
+     * @var array $params
      */
-    protected $params = array();
+    protected $params = [];
 
     /**
      *
-     * @var Array
+     * @var array $parts
      */
-    protected $parts = array();
-
-    /**
-     *
-     * @var Integer
-     */
-    protected $partsCount = 0;
+    protected $parts = [];
 
     /**
      * 
-     * @param String $path
+     * @param string $path
      */
-    public function __construct($path = '')
+    public function __construct(string $path = '')
     {
-        $this->basePath = $path;
-        $this->parseURL();
+        $this->setBasePath($path);
     }
 
     /**
-     * Here we get and check the URL that was called by the user.
-     * If there is no controller with a method that was called via the url, we can prevent this call from taking place
-     */
-    private function parseURL()
-    {
-        // Get URL
-        $path = trim(filter_input(INPUT_SERVER, "REQUEST_URI"), "/");
-
-        // Check whether the path in the basePath is at the beginning pos 0
-        if ($this->basePath && strpos($path, $this->basePath) == 0) {
-            // Then cut off the domain
-            $path = substr($path, strlen($this->basePath));
-        }
-
-        // Split url
-        $part = explode("/", $path);
-        $this->parts = $part;
-        $this->partsCount = count($part);
-
-        // Index in the url do not allow, we do not want to see this controller.
-        if ($part[0] == "index") {
-            header("Location: " . PROJECT_HTTP_ROOT . DIRECTORY_SEPARATOR);
-        }
-
-        // Loop parsed Query
-        for ($i = 0; $i < $this->partsCount; $i++) {
-            // Only for the index path
-            if ($part[$i] && $i == 0 && count($part) == 1) {
-                $this->setController($part[$i]); // Set controller
-                $this->setAction($part[$i]); // Set action
-            } else if ($part[$i] && $i == 0 && count($part) == 2) {
-                $this->setController($part[$i]); // Set controller
-            } else if ($part[$i] && $i == 1 && count($part) == 2) {
-                $this->setAction($part[$i]); // Set action
-            } else if ($part[$i]) {
-                $this->setParams($part[$i]); // Set parameters
-            }
-        }
-    }
-
-    /**
+     * Returns the base path
      * 
-     * @return String
-     */
-    public function getController()
-    {
-        return $this->controller;
-    }
-
-    /**
-     * 
-     * @return String
-     */
-    public function getAction()
-    {
-        return $this->action;
-    }
-
-    /**
-     * Returns the current Params
-     * @return Array
-     */
-    public function getParams()
-    {
-        return array_filter($this->params);
-    }
-
-    /**
-     * 
-     * @return String
+     * @return string
      */
     public function getBasePath()
     {
@@ -146,76 +76,169 @@ class FrontController extends ErrorController
     }
 
     /**
-     * Check and set the Controller class
+     * Returns the controller name
      * 
-     * @param String $controller
+     * @return string
      */
-    private function setController($controller)
+    public function getController()
     {
-        // Create controller
-        $controller = __NAMESPACE__ . "\\" . ucfirst(strtolower($controller)) . "Controller";
-        // Does this class exist
-        if (class_exists($controller)) {
-            $this->controller = $controller;
-        } else {
-            $this->controller = self::DEFAULT_CONTROLLER;
-        }
+        return $this->controller;
     }
 
     /**
-     * Check and set the Action for the class Method
+     * Returns the action name 
      * 
-     * @param String $action
+     * @return string
      */
-    private function setAction($action)
+    public function getAction()
     {
-        // Create action method
-        $method = strtolower($action) . "Action";
-        // Classes runner
-        $rc = new \ReflectionClass($this->controller);
-        // Does this class also have this method ?
-        if ($rc->hasMethod($method)) {
-            $this->action = $method;
-        } else {
-            $this->controller = self::ERROR_CONTROLLER;
-            $this->action = self::ERROR_ACTION;
-        }
+        return $this->action;
     }
 
     /**
-     * Set params for controller class and action method
+     * Returns the current Parameters
      * 
-     * @param String $params
-     * @param String $part
+     * @return array
      */
-    protected function setParams($params, $part = '')
+    public function getParams()
     {
-        if ($part) {
-            $this->params[$part][] = $params;
-        } else {
-            $this->params[] = $params;
-        }
+        return array_filter($this->params);
     }
 
     /**
+     * Setter for the base path to root folder
      * 
-     * @param String $basePath
+     * @param string $basePath
      */
-    private function setBasePath($basePath)
+    private function setBasePath(string $basePath = '')
     {
         $this->basePath = $basePath;
     }
 
     /**
-     * Run class with method and params
+     * Check and set the controller (class)
+     * 
+     * @param string $controller
+     */
+    private function setController(string $controller = '')
+    {
+        if ($controller) {
+            $controller = __NAMESPACE__ . "\\" . ucfirst(strtolower($controller)) . "Controller";
+            if (class_exists($controller)) {
+                $this->controller = $controller;
+            } else {
+                $this->controller = self::DEFAULT_CONTROLLER;
+            }
+        }
+    }
+
+    /**
+     * Check and set the action (method) for the controller (class)
+     * 
+     * @param string $action
+     */
+    private function setAction(string $action = '')
+    {
+        if ($action) {
+            $method = strtolower(strip_tags($action)) . "Action";
+            $rc = new \ReflectionClass($this->controller);
+            if ($rc->hasMethod($method)) {
+                $this->action = $method;
+            } else {
+                $this->controller = self::ERROR_CONTROLLER;
+                $this->action = self::ERROR_ACTION;
+            }
+        }
+    }
+
+    /**
+     * Setter for parameters to use in controller (class) and action (method)
+     * 
+     * @param string $param - The parameter for the params array
+     * @param string $part - The key for specific parts
+     */
+    protected function setParams(string $param = '', string $part = '')
+    {
+        if ($param && $part) {
+            $this->params[$part][] = $param;
+        } else if ($param && !$part) {
+            $this->params[] = $param;
+        }
+    }
+
+    /**
+     * 
+     * @param string $string
+     * 
+     * @return boolean
+     */
+    private function allowedSigns(string $string = '')
+    {
+        if (preg_match('/[a-z0-9\?\/\=\&]*$/i', $string)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Here we get and check the URL that was called by the user.
+     * If there is no controller with a method that was called via the url, we can prevent this call from taking place
+     * 
+     * @see https://www.php.net/manual/en/function.filter-input.php
+     */
+    private function parseURL()
+    {
+        $path = trim(filter_input(INPUT_SERVER, "REQUEST_URI"), "/"); // Get URL
+
+        if ($path && !$this->allowedSigns($path)) {
+            $this->setController(self::ERROR_CONTROLLER);
+            $this->setAction(self::ERROR_ACTION);
+            return;
+        }
+
+        // Check whether the path in the basePath is at the beginning pos 0
+        if ($this->getBasePath() && strpos($path, $this->getBasePath()) == 0) {
+            $path = substr($path, strlen($this->getBasePath())); // Then cut off the domain
+        }
+
+        $this->parts = $path ? explode("/", $path) : []; // Split string 
+        // Index in the url do not allow, we do not want to see this controller
+        if (isset($this->parts[0]) && $this->parts[0] == "index") {
+            header("Location: " . PROJECT_HTTP_ROOT . DIRECTORY_SEPARATOR, true, 302);
+        }
+
+        if (isset($this->parts[0]) && $this->parts[0] == "de") {
+            Lang::setLang("de");
+            array_splice($this->parts, 0, 1);
+        } else {
+            Lang::setLang("en");
+        }
+
+        if (count($this->parts) < 5) {
+            for ($i = 0; $i < count($this->parts); $i++) {
+                if ($this->parts[$i] && $i == 0 && count($this->parts) == 1) {
+                    $this->setController($this->parts[$i]); // Set controller
+                    $this->setAction($this->parts[$i]); // Set action
+                } else if ($this->parts[$i] && $i == 0 && count($this->parts) == 2) {
+                    $this->setController($this->parts[$i]); // Set controller
+                } else if ($this->parts[$i] && $i == 1 && count($this->parts) == 2) {
+                    $this->setAction($this->parts[$i]); // Set action
+                } else if ($this->parts[$i]) {
+                    $this->setParams($this->parts[$i]); // Set parameters
+                }
+            }
+        }
+    }
+
+    /**
+     * Run controller (class) with action (method) and the parameters
+     * 
+     * @see https://www.php.net/manual/en/function.call-user-func-array.php
      */
     public function run()
     {
-
-        //        var_dump($this->controller);
-        //        var_dump($this->action);
-        //        var_dump($this->partsCount);
-        //        var_dump($this->params);
+        $this->parseURL();
         call_user_func_array(array(new $this->controller, $this->action), array($this->params));
     }
+
 }

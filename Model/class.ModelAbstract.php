@@ -1,6 +1,6 @@
 <?php
 
-namespace Modal;
+namespace Model;
 
 /**
  * Description of Modal Abstract
@@ -13,58 +13,52 @@ namespace Modal;
  * @version     1.0
  * @since       1.0
  */
-abstract class ModalAbstract
+abstract class ModelAbstract
 {
-
     /**
      * ID placeholder for all modals
-     * @var type 
+     * 
+     * @var integer 
      */
     protected $ID = 0;
 
-    // GETTER //////////////////////////////////////////////////////////////////
-
     /**
-     * Return the ID back
-     * @return type
+     * Returns the ID back
+     * 
+     * @return integer
      */
     public function getID()
     {
-
         return (int) $this->ID;
     }
 
-    // SETTER //////////////////////////////////////////////////////////////////
-
     /**
-     * Set the ID
-     * @param type
+     * Settter for the ID
+     * 
+     * @param integer
      */
     public function setID($ID = NULL)
     {
-
         $this->ID = (int) $ID;
     }
 
     /**
      * This function set array to objects from object
-     * @param array
+     * 
+     * @see http://php.net/manual/en/function.method-exists.php
+     * 
+     * @param array $array
      */
     public function setByArray(array $array = array())
     {
-
         if ($array) {
             foreach ($array as $key => $value) {
                 $setter = 'set' . ucfirst($key);
-                //                _evd($setter);
-                /**
-                 * Check if method exists in this classes
-                 * @see http://php.net/manual/en/function.method-exists.php
-                 */
                 if (method_exists($this, $setter)) {
                     $this->$setter($value);
                 }
             }
         }
     }
+
 }

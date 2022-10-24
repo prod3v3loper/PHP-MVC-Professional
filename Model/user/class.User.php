@@ -1,6 +1,6 @@
 <?php
 
-namespace Modal\user;
+namespace Model\user;
 
 /**
  * Description of User
@@ -15,105 +15,85 @@ namespace Modal\user;
  * @version     1.0
  * @since       1.0
  */
-class User extends UserModal
+class User extends UserModel
 {
-
     /**
-     * @var String Firstname
+     * @var string $firstname
      */
     protected $firstname = '';
 
     /**
-     * @var String Lastname
+     * @var string $lastname
      */
     protected $lastname = '';
 
     /**
-     * @var String Name
+     * @var string $name
      */
     protected $name = '';
 
     /**
-     * @var String Email
+     * @var string $email
      */
     protected $email = '';
 
     /**
-     * @var String Password
+     * @var string $password
      */
     protected $password = '';
 
     /**
-     *
-     * @var String Password Hash
+     * @var string $passHash
      */
     protected $passHash = '';
 
     /**
-     *
-     * @var String Password crypto
+     * @var string $passHashAlgo
      */
     protected $passHashAlgo = PASSWORD_BCRYPT;
 
     /**
-     * 
-     * @var Array Password Hash options
+     * @var array $passHashOptionen
      */
     protected $passHashOptionen = array(
         'cost' => 12
     );
 
     /**
-     * @var String Old Password
+     * @var string $oldPassword
      */
     protected $oldPassword = '';
 
     /**
-     * @var Integer Role
+     * @var integer $role
      */
     protected $role = 3;
 
     /**
-     * @var Integer Accept
+     * @var integer $accept
      */
     protected $accept = 0;
 
     /**
-     * @var Array Meta
+     * @var array $meta
      */
     protected $meta = '';
 
     /**
-     * @var Integer Date
+     * @var integer $created
      */
     protected $created = 0;
 
     /**
-     * @var Integer Update
+     * @var integer $updated
      */
     protected $updated = 0;
 
-    /**
-     * Call on instance the object
-     */
-    public function __construct()
-    {
-
-        parent::__construct(); // Inherited Constructor
-    }
-
-    /**
-     * Call on destruct of the object from memory
-     */
     public function __destruct()
     {
         //        print "Die Klasse " . __CLASS__ . " wurde aus dem spichert entfernt";
     }
 
-    /**
-     * Call on copy of the object
-     * @todo Create security table and save in db nt allowed accesses
-     */
     public function __clone()
     {
         //        print "Sie versuchen die Klasse " . __CLASS__ . " zu klonen";
@@ -170,26 +150,41 @@ class User extends UserModal
         return $str;
     }
 
-    // SETTER Methoden /////////////////////////////////////////////////////////
-
-    public function setFirstname($firstname)
+    /**
+     * 
+     * @param string $firstname
+     */
+    public function setFirstname(string $firstname = '')
     {
         $this->firstname = ucfirst($firstname);
     }
 
-    public function setLastname($lastname)
+    /**
+     * 
+     * @param string $lastname
+     */
+    public function setLastname(string $lastname = '')
     {
         $this->lastname = ucfirst($lastname);
     }
 
-    public function setName($name)
+    /**
+     * Use the setter methods for check again before assign
+     * 
+     * @param string $name
+     */
+    public function setName(string $name = '')
     {
-        if (is_string($name) && strlen($name) > 0 && strlen($name) <= 100) {
+        if (strlen($name) > 0 && strlen($name) <= 100) {
             $this->name = ucfirst($name);
         }
     }
 
-    public function setEmail($email)
+    /**
+     * 
+     * @param string $email
+     */
+    public function setEmail(string $email = '')
     {
         if (is_string($email) && strlen($email) > 0 && strlen($email) <= 255) {
             //            $this->email = str_replace('@', ' _*_ ', $this->email);
@@ -197,18 +192,14 @@ class User extends UserModal
         }
     }
 
-    public function setPassword($pass)
+    /**
+     * 
+     * @param string $pass
+     */
+    public function setPassword(string $pass = '')
     {
         if (is_string($pass) && strlen($pass) > 0 && strlen($pass) <= 255) {
             $this->password = $pass;
-            $this->hashPassword();
-        }
-    }
-
-    protected function hashPassword()
-    {
-        if (!empty($this->password)) {
-            $this->passHash = password_hash($this->password, $this->passHashAlgo, $this->passHashOptionen);
         }
     }
 
@@ -228,7 +219,11 @@ class User extends UserModal
         }
     }
 
-    public function setRole($role)
+    /**
+     * 
+     * @param int $role
+     */
+    public function setRole(int $role = 0)
     {
         $this->role = $role;
     }
@@ -238,52 +233,48 @@ class User extends UserModal
         $this->accept = $accept;
     }
 
-    public function setCreated($created)
+    /**
+     * 
+     * @param int $created
+     */
+    public function setCreated(int $created = 0)
     {
         $this->created = $created;
     }
 
-    public function setUpdated($updated)
+    /**
+     * 
+     * @param int $updated
+     */
+    public function setUpdated(int $updated = 0)
     {
         $this->updated = $updated;
     }
 
-    // GETTER Methoden /////////////////////////////////////////////////////////
-
     public function getFirstname()
     {
-        return $this->firstname;
+        return (string) $this->firstname;
     }
 
     public function getLastname()
     {
-        return $this->lastname;
+        return (string) $this->lastname;
     }
 
     public function getName()
     {
-        return $this->name;
+        return (string) $this->name;
     }
 
     public function getEmail()
     {
         //        $this->email = str_replace('@', ' _*_ ', $this->email);
-        return $this->email;
+        return (string) $this->email;
     }
 
     public function getPassword()
     {
         return $this->password;
-    }
-
-    public function verifyPasswordHash($password)
-    {
-        return password_verify($password, $this->passHash);
-    }
-
-    public function checkPasswordNeedsRehash()
-    {
-        return password_needs_rehash($this->passHash, $this->passHashAlgo, $this->passHashOptionen);
     }
 
     public function getOldPassword()
@@ -298,7 +289,7 @@ class User extends UserModal
 
     public function getRole()
     {
-        return $this->role;
+        return (int) $this->role;
     }
 
     public function getAccept()
@@ -308,11 +299,88 @@ class User extends UserModal
 
     public function getCreated()
     {
-        return $this->created;
+        return (int) $this->created;
     }
 
     public function getUpdated()
     {
-        return $this->updated;
+        return (int) $this->updated;
     }
+
+    /**
+     * @see https://www.php.net/manual/de/function.password-hash.php
+     */
+    protected function hashPassword()
+    {
+        $this->password = password_hash($this->password, $this->passHashAlgo, $this->passHashOptionen);
+    }
+
+    /**
+     * 
+     * @see https://www.php.net/manual/en/function.password-verify.php
+     * 
+     * @param string $pass
+     * @param string $hash
+     * 
+     * @return boolean
+     */
+    protected function verifyPassword(string $pass = '', string $hash = '')
+    {
+        return password_verify($pass, $hash);
+    }
+
+    /**
+     * 
+     * @return boolean
+     */
+    public function login()
+    {
+        $user = self::findByAttribute(
+                        array('email'),
+                        array($this->getEmail()),
+                        'ID,email,password'
+        );
+
+        if ($user) {
+            
+            if ($this->verifyPassword($this->getPassword(), $user->getPassword())) {
+
+                session_regenerate_id();
+
+                $_SESSION['user-logged-in'] = true;
+                $_SESSION['user-logged-in-since'] = time();
+                $_SESSION['user-id'] = $user->getID();
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @see https://www.php.net/manual/de/reserved.variables.session
+     */
+    public function logout()
+    {
+        unset($_SESSION['user-logged-in']);
+        unset($_SESSION['user-logged-in-since']);
+        unset($_SESSION['user-id']);
+
+        header("Location: " . PROJECT_HTTP_ROOT . DIRECTORY_SEPARATOR . 'user/login/', true, 302);
+    }
+
+    /**
+     * 
+     * @return boolean
+     */
+    public function loggedIn()
+    {
+        if (isset($_SESSION['user-logged-in']) && $_SESSION['user-logged-in'] === true) {
+            return true;
+        }
+
+        return false;
+    }
+
 }

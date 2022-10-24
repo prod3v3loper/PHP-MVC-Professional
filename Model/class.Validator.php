@@ -1,6 +1,6 @@
 <?php
 
-namespace Modal;
+namespace Model;
 
 /**
  * Description of Validator
@@ -17,35 +17,39 @@ namespace Modal;
  */
 class Validator extends ValidatorAbstract
 {
-
     /**
      * Hold the errors for validation and more classes
-     * @var type 
+     * 
+     * @var array $errors
      */
     protected $errors = array();
 
     /**
      * Hold the successes for the validator and more classes
-     * @var type 
+     * 
+     * @var array $successes
      */
     protected $successes = array();
 
     /**
-     * This function set validate for POST fields and call the validate function
+     * This function set validate for fields and call the validate function
+     * 
+     * @uses $contact->validateByArray($array);
+     * 
+     * @param array $data
      */
-    public function validateByArray(array $data)
+    public function validateByArray(array $data = [])
     {
-
         if ($data) {
             foreach ($data as $key => $val) {
-
+                // Create method in validator
                 $validate = 'validate' . ucfirst($key);
-                //                _evd($validate);
-                /**
-                 * Check if method exists in this classes
-                 * @see http://php.net/manual/en/function.method-exists.php
-                 */
+                // If this method exists ?
                 if (method_exists($this, $validate)) {
+                    /**
+                     * On exists method in class validate input with the validator
+                     * Call in UserValidator.php, class.ContactValidator.php etc.
+                     */
                     $this->$validate($val);
                 }
             }
@@ -54,13 +58,14 @@ class Validator extends ValidatorAbstract
 
     /**
      * Filter with regex
-     * @param type $value
-     * @param type $regex
-     * @return type
+     * 
+     * @param string $value - The value you want to filter with the regex
+     * @param string $regex - E.g. /[a-z]/i
+     * 
+     * @return boolean
      */
-    protected function filterRegex($value, $regex)
+    protected function filterRegex(string $value, string $regex)
     {
-
         return filter_var($value, FILTER_VALIDATE_REGEXP, array(
             'options' => array('regexp' => $regex)
         ));
@@ -68,55 +73,60 @@ class Validator extends ValidatorAbstract
 
     /**
      * This function add the success messages
-     * @param type
+     * 
+     * @param string $success
      */
-    public function addSuccess($success)
+    public function addSuccess(string $success)
     {
-
-        $this->successes[] = $success;
+        if ($success) {
+            $this->successes[] = $success;
+        }
     }
 
     /**
      * This function returns the success messages
-     * @return type
+     * 
+     * @return array
      */
     public function getSuccess()
     {
-
         return $this->successes;
     }
 
     /**
      * This function add the error messages
-     * @param type
+     * 
+     * @param string $error - The error message you want to set
+     * @param string $key - If you want you can use a key to specify messages
      */
-    public function addError($error, $key = '')
+    public function addError(string $error = '', string $key = '')
     {
-        if ($key) {
+        if ($error && $key) {
             $this->errors[$key][] = $error;
-        } else {
+        } else if ($error && !$key) {
             $this->errors[] = $error;
         }
     }
 
     /**
      * This function returns the error messages
+     * 
      * @return array
      */
     public function getErrors()
     {
-
         return $this->errors;
     }
 
     /**
-     * This function checks if errors
+     * This function checks if errors array empty
      * Is empty returns TRUE if not empty return FALSE
-     * @return type
+     * 
+     * @return boolean
      */
     public function isValid()
     {
-
         return empty($this->errors);
     }
+
 }

@@ -130,7 +130,7 @@
 
             list-style: none;
 
-            a {
+            > a {
 
                 display: block;
                 padding: .7em;
@@ -147,7 +147,7 @@
 
             .mb-nav--active {
 
-                a {
+                > a {
 
                     color: #fff;
                     .transition(all .2s ease);
@@ -158,7 +158,7 @@
 
                 list-style: none;
 
-                a {
+                > a {
 
                     display: block;
                     padding: .7em;
@@ -279,7 +279,8 @@
 
         .mb-nav--navbar {
 
-            position: absolute;
+            position: static;
+            text-align: right;
             display: inline-block;
             width: 100%;
             min-height: 57px;
@@ -294,7 +295,7 @@
                 max-height: 57px;
                 line-height: 130%;
 
-                a {
+                > a {
 
                     display: inline-block;
                     min-height: 57px;
@@ -461,7 +462,11 @@
 
         .mb-article {
 
-            margin: 2em auto;
+            padding: 20px;
+            margin: 0 auto 2em auto;
+            border: 0 none;
+            background-color: #f2f2f2;
+            border: 1px solid #ddd;
 
             .mb-article--title {
 
@@ -488,6 +493,15 @@
         }
     }
 }
+
+@media @mq-m-min {
+
+    .mb-wrap {
+
+        padding-top: 100px;
+        padding-bottom: 80px;
+    }
+} 
 
 /* ************** *
  *      FOOT

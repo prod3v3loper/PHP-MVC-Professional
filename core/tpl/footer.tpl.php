@@ -5,8 +5,8 @@
         <div class="l-col--8">
             <h4>Information</h4>
             <ul>
-                <li><a href="https://www.tnado.com/imprint/">Imprint</a></li>
-                <li><a href="https://www.tnado.com/data-protection/">Privacy</a></li>
+                <li><a href="<?php echo PROJECT_HTTP_ROOT . DIRECTORY_SEPARATOR; ?>imprint/">Imprint</a></li>
+                <li><a href="<?php echo PROJECT_HTTP_ROOT . DIRECTORY_SEPARATOR; ?>privacy/">Privacy</a></li>
             </ul>
         </div>
         <div class="l-col--8">
@@ -28,7 +28,7 @@
         </div>
         <div class="l-col--24">
             <div class="l-col--12 maa-copy">
-                <p>Copyright &copy;  <?php echo date("Y"); ?> by <a href="https://www.tnado.com" target="_blank">TNADO</a></p>
+                <p>Copyright &copy;  <?php echo date("Y"); ?> by <a href="https://www.prod3v3loper.com" target="_blank">prod3v3loper</a></p>
             </div>
             <div class="l-col--12 maa-copy">
                 <p>In cooperation with <a href="https://hyperl.de" target="_blank">Hyperly</a></p>

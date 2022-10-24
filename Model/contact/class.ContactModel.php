@@ -1,9 +1,9 @@
 <?php
 
-namespace Modal\user;
+namespace Model\contact;
 
 /**
- * Description of User Modal
+ * Description of Contact Model
  * 
  * @author      prod3v3loper
  * @copyright   (c) 2021, Samet Tarim
@@ -13,17 +13,21 @@ namespace Modal\user;
  * @version     1.0
  * @since       1.0
  */
-class UserModal extends UserValidator
+class ContactModel extends ContactValidator
 {
+
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
     /**
      * 
      * @param type $db
      * @param type $class
      */
-    public static function init($db = "user", $class = "\User")
+    public static function init($db = "contact", $class = "\Contact")
     {
-
         if (defined('DB_PREFIX')) {
             self::$TABLE = DB_PREFIX . $db; // Database table
         }
@@ -31,12 +35,12 @@ class UserModal extends UserValidator
     }
 
     /**
-     * SAVE - handels insert and update
-     * @return type Boolean
+     * SAVE
+     * 
+     * @return bool
      */
     public function saveObject()
     {
-
         if ($this->ID == 0) {
             $return = $this->insert();
         } else if ($this->ID > 0) {
@@ -47,11 +51,11 @@ class UserModal extends UserValidator
 
     /**
      * REMOVE
-     * @return type
+     * 
+     * @return bool
      */
     public function remove()
     {
-
         if ($this->ID > 0) {
             $return = $this->delete();
         }
@@ -59,67 +63,61 @@ class UserModal extends UserValidator
     }
 
     /**
-     * CREATE
-     * @return boolean
+     * INSERT
+     * 
+     * @return bool
      */
     private function insert()
     {
-
         self::init();
         $return = false;
         if ($this->isOK()) {
-            $sql = "INSERT INTO `" . self::$TABLE . "` (`firstname`,`lastname`,`name`,`email`,`password`,`oldPassword`,`meta`,`role`,`accept`,`created`,`updated`) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+            $sql = "INSERT INTO `" . self::$TABLE . "` (`name`,`email`,`subject`,`message`,`created`) VALUES (?,?,?,?,?)";
             $stmt = self::$DBH->prepare($sql);
             $stmt->execute(array(
-                $this->firstname,
-                $this->lastname,
                 $this->name,
                 $this->email,
-                $this->password,
-                $this->oldPassword,
-                $this->meta,
-                $this->role,
-                $this->accept,
-                time(),
+                $this->subject,
+                $this->message,
                 time()
             ));
             $return = $stmt ? true : false;
+            $stmt = null; // Clean statement
         }
         return $return;
     }
 
     /**
      * UPDATE
-     * @return boolean
+     * 
+     * @return bool
      */
     private function update()
     {
 
         self::init();
         $return = false;
-
         if ($this->isOK()) {
-            $sql = "UPDATE `" . self::$TABLE . "` SET `firstname` = ?, `lastname` = ?, `name` = ?, `email` = ?, `meta` = ?, `role` = ?, `accept` = ?, `updated` = ? WHERE `ID` = ?";
+            $sql = "UPDATE `" . self::$TABLE . "` SET `name`=?, `email`=?, `subject`=?, `message`=? WHERE `ID`=?";
             $stmt = self::$DBH->prepare($sql);
             $stmt->execute(array(
-                $this->firstname,
-                $this->lastname,
                 $this->name,
                 $this->email,
-                $this->meta,
-                $this->role,
-                $this->accept,
+                $this->subject,
+                $this->message,
                 time(),
-                $this->ID,
+                $this->ID
             ));
             $return = ($stmt->rowCount() <= 0) ? false : true;
+            $stmt = null; // Clean statement
         }
         return $return;
     }
 
     /**
      * DELETE
-     * @return boolean
+     * 
+     * @return bool
      */
     private function delete()
     {
@@ -133,22 +131,9 @@ class UserModal extends UserValidator
                 $this->ID
             ));
             $return = ($stmt->rowCount() > 0) ? true : false;
+            $stmt = null; // Clean statement
         }
         return $return;
-    }
-
-    // READ
-
-    public static function find($order = '', $type = '')
-    {
-        self::init();
-        return parent::find($order, $type);
-    }
-
-    public static function findAll($order = '', $type = '')
-    {
-        self::init();
-        return parent::findAll($order, $type);
     }
 
     public static function findById($id)
@@ -157,9 +142,4 @@ class UserModal extends UserValidator
         return parent::findById($id);
     }
 
-    public static function findByName($name)
-    {
-        self::init();
-        return parent::findByName($name);
-    }
 }

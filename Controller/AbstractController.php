@@ -18,15 +18,4 @@ namespace Controller;
 abstract class AbstractController
 {
 
-    //    static protected $entityManager;
-    //    
-    //    /**
-    //     * The entitymanager example
-    //     * 
-    //     * @param type object $entityManager
-    //     */
-    //    static function setEntityManager($entityManager) {
-    //        
-    //        self::$entityManager = $entityManager;
-    //    }
 }

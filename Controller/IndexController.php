@@ -2,7 +2,10 @@
 
 namespace Controller;
 
-use View\FrontView as V;
+use View\FrontView as V,
+    Model\contact\Contact as C,
+    core\classes\mail\Mailer as SM,
+    core\classes\secure\HoneyPot;
 
 /**
  * Description of indexController
@@ -23,12 +26,14 @@ class IndexController extends AbstractController
     /**
      * This is the first action called on default
      * The parameter is filled in the front controller and is automatically given to every action called
+     * You can get content from db
      * 
-     * @param type $params
+     * Start Site
+     * 
+     * @param string $params
      */
-    public function indexAction($params = "")
+    public function indexAction(array $params = [])
     {
-
         V::addContext('data', array(
             "templates" => array(
                 "header",
@@ -36,12 +41,11 @@ class IndexController extends AbstractController
                 "home",
                 "footer"
             ),
-            "meta-title" => "Online, FREE and unlimited usage",
             "robots" => "index, follow, noodp",
-            "title" => "SEO Tools Online for FREE and unlimited usage",
+            "title" => "Start",
             "description" => "Free SEO online tools from tnado take you to the top. Try your site today to optimize on onpage as offpage and much more.",
             "nav-active" => "home",
-            "content" => "<h2>Search Engine Optimization</h2><p>Free Search Engine Optimization tools from tnado take you to the top. Try your site today to optimize on onpage as offpage and much more. With our tools you can check everything without limits.</p>",
+            "content" => "<h2>Welcome to the Melabuai MVC Homepage</h2><p>This MVC is an <b>Professional</b> Model View Controller</p>",
             "image" => PROJECT_HTTP_ROOT . DIRECTORY_SEPARATOR . "core/img/home.jpg"
         ));
 
@@ -49,11 +53,12 @@ class IndexController extends AbstractController
     }
 
     /**
+     * About page
      * 
+     * @param string $params
      */
-    public function aboutAction()
+    public function aboutAction(array $params = [])
     {
-
         V::addContext('data', array(
             "templates" => array(
                 "header",
@@ -61,21 +66,24 @@ class IndexController extends AbstractController
                 "about",
                 "footer"
             ),
-            "meta-title" => "About",
             "robots" => "index, follow, noodp",
             "title" => "About us",
             "description" => "Our story about SEO programming optimization with background and all that belongs to it can be found here.",
             "nav-active" => "about",
-            "content" => "<h2>About</h2><p>TNADO is specializes in SEO & AMP. Our story about SEO programming optimization with background and all that belongs to it can be found here.</p>",
+            "content" => "<h2>About</h2><p>Whitelabel Framwork easy and understandable.</p>",
             "image" => PROJECT_HTTP_ROOT . DIRECTORY_SEPARATOR . "core/img/home.jpg"
         ));
 
         V::display();
     }
 
-    public function blogAction()
+    /**
+     * Blog page
+     * 
+     * @param string $params
+     */
+    public function blogAction(array $params = [])
     {
-
         V::addContext('data', array(
             // On templates you can change all if you want to style another
             "templates" => array(
@@ -84,42 +92,55 @@ class IndexController extends AbstractController
                 "blog",
                 "footer" // create new footer-blog
             ),
-            "meta-title" => "Support",
             "robots" => "index, follow, noodp",
-            "title" => "Support",
+            "title" => "Blog",
             "description" => "We provide support and expect support, so if there is any support please contact us or we will support you with our know how.",
-            "nav-active" => "support",
-            "content" => "<h2>Support</h2><p>We provide support and expect support. So if there is any support please contact us or we will support you with our know how.</p>",
+            "nav-active" => "blog",
+            "content" => "<h2>Blog</h2><p>We provide support and expect support. So if there is any support please contact us or we will support you with our know how.</p>",
             "image" => PROJECT_HTTP_ROOT . DIRECTORY_SEPARATOR . "core/img/home.jpg"
         ));
 
         V::display();
     }
 
-    public function supportAction()
+    /**
+     * Contact page with form
+     * 
+     * @param string $params
+     */
+    public function contactAction(array $params = [])
     {
+        $smailer = new SM();
 
-        V::addContext('data', array(
-            "templates" => array(
-                "header",
-                "nav",
-                "support",
-                "footer"
-            ),
-            "meta-title" => "Support",
-            "robots" => "index, follow, noodp",
-            "title" => "Support",
-            "description" => "We provide support and expect support, so if there is any support please contact us or we will support you with our know how.",
-            "nav-active" => "support",
-            "content" => "<h2>Support</h2><p>We provide support and expect support. So if there is any support please contact us or we will support you with our know how.</p>",
-            "image" => PROJECT_HTTP_ROOT . DIRECTORY_SEPARATOR . "core/img/home.jpg"
-        ));
-
-        V::display();
-    }
-
-    public function contactAction()
-    {
+        // EXAMPLE USE OF A MODAL
+        /**
+         * Contact model instance
+         * Call from class.ContactModel.php
+         */
+        $contact = new C();
+        $contact->setCsrf(); // Create csrf token for form in template
+        // If contact form send
+        if (isset($_POST["contact"])) {
+            // Validate all fields in validator
+            $contact->validateByArray($_POST);
+            // Is valid ?
+            if ($contact->isValid()) {
+                // Set all data to User modal
+                $contact->setByArray($_POST);
+                /**
+                 * Save user in db
+                 * Call from class.UserModel.php
+                 */
+                if ($contact->saveObject()) {
+                    if ($smailer->sendMail($contact->getEmail(), 'Thanks for contact', 'We have received your contact message')) {
+                        $contact->addSuccess('Mail send thanks for contact us');
+                        $contact->cleanCsrf(); // Clean csrf token on success
+                    } else {
+                        $contact->addError('Mail not send, please try again');
+                    }
+                }
+            }
+        }
 
         V::addContext('data', array(
             "templates" => array(
@@ -128,43 +149,52 @@ class IndexController extends AbstractController
                 "contact",
                 "footer"
             ),
-            "meta-title" => "Contact",
             "robots" => "index, follow, noodp",
             "title" => "Contact us",
             "description" => "",
             "nav-active" => "contact",
             "content" => "<h2>Contact</h2><p>We love to build connection you too ? Then feel ever free and contact us.</p>",
-            "image" => PROJECT_HTTP_ROOT . DIRECTORY_SEPARATOR . "core/img/home.jpg"
+            "image" => PROJECT_HTTP_ROOT . DIRECTORY_SEPARATOR . "core/img/home.jpg",
+            'csrf' => $contact->getCsrf(), // Use in form token
+            'success' => $contact->getSuccess(), // All success
+            'errors' => $contact->getErrors() // All errors
         ));
 
         V::display();
     }
 
-    public function advertisingAction()
+    /**
+     * Support page
+     * 
+     * @param string $params
+     */
+    public function supportAction(array $params = [])
     {
-
         V::addContext('data', array(
             "templates" => array(
                 "header",
                 "nav",
-                "advertising",
+                "support",
                 "footer"
             ),
-            "meta-title" => "Advertising",
             "robots" => "index, follow, noodp",
-            "title" => "Advertising",
-            "description" => "",
-            "nav-active" => "advertising",
-            "content" => "<h2>Advertising</h2><p>We can place your Company on the fields.</p>",
+            "title" => "Support",
+            "description" => "We provide support and expect support, so if there is any support please contact us or we will support you with our know how.",
+            "nav-active" => "support",
+            "content" => "<h2>Support</h2><p>We provide support and expect support. So if there is any support please contact us or we will support you with our know how.</p>",
             "image" => PROJECT_HTTP_ROOT . DIRECTORY_SEPARATOR . "core/img/home.jpg"
         ));
 
         V::display();
     }
 
-    public function imprintAction()
+    /**
+     * Imprint page
+     * 
+     * @param string $params
+     */
+    public function imprintAction(array $params = [])
     {
-
         V::addContext('data', array(
             "templates" => array(
                 "header",
@@ -172,16 +202,24 @@ class IndexController extends AbstractController
                 "imprint",
                 "footer"
             ),
+            "robots" => "index, follow, noodp",
             "title" => "Imprint",
+            "description" => "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+            "nav-active" => "imprint",
+            "content" => "<h2>Imprint</h2><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>",
             "image" => PROJECT_HTTP_ROOT . DIRECTORY_SEPARATOR . "core/img/home.jpg"
         ));
 
         V::display();
     }
 
-    public function privacyAction()
+    /**
+     * Privacy Page
+     * 
+     * @param string $params
+     */
+    public function privacyAction(array $params = [])
     {
-
         V::addContext('data', array(
             "templates" => array(
                 "header",
@@ -189,27 +227,38 @@ class IndexController extends AbstractController
                 "privacy",
                 "footer"
             ),
+            "robots" => "index, follow, noodp",
             "title" => "Privacy",
+            "description" => "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+            "nav-active" => "privacy",
+            "content" => "<h2>Privacy</h2><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>",
             "image" => PROJECT_HTTP_ROOT . DIRECTORY_SEPARATOR . "core/img/home.jpg"
         ));
 
         V::display();
     }
 
-    public function errorAction()
+    /**
+     * If someone calls the url /login then we log them, because we don't have an login under this controller
+     * 
+     * Congrulations the first honeypot !!!
+     * 
+     * @param string $params
+     */
+    public function loginAction(array $params = [])
     {
-
-        header("HTTP/1.0 404 Not Found");
+        HoneyPot::logging();
 
         V::addContext('data', array(
             "templates" => array(
-                "error",
+                "error"
             ),
-            "meta-title" => "404",
-            "title" => "404 Page not found",
-            "description" => "This is the page that appears and does not appear if a page on our server does not exist, but it can lead you back to a working page."
+            "title" => "Error",
         ));
 
         V::display();
+        die();
     }
+
+    // Add more honeypots...
 }

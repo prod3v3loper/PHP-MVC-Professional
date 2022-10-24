@@ -1,8 +1,7 @@
 <?php
 
-namespace Modal\user;
+namespace Model\user;
 
-// Needed classes
 use View\FrontView;
 
 /**
@@ -18,40 +17,65 @@ use View\FrontView;
  * @version     1.0
  * @since       1.0
  */
-class UserValidator extends \Modal\Validator
+class UserValidator extends \Model\Validator
 {
     /**
-     *
-     * @var String Default min length
+     * @var integer $minPassLength
      */
-    protected $minLength = 8;
+    protected $minPassLength = 8;
+    /**
+     * @var integer $minTextLength
+     */
+    protected $minTextLength = 3;
 
+    /**
+     * @var string $passcheck
+     */
     protected $passcheck = '';
-
-    protected $mailcheck = '';
 
     /**
      * 
-     * @param type $email
+     * @param string $firstname
      */
-    public function validateEmail($email)
+    public function validateFirstName(string $firstname = '')
     {
-        // http://php.net/manual/de/filter.examples.sanitization.php
-        $this->mailcheck = filter_var($email, FILTER_SANITIZE_EMAIL);
-
-        if (empty($email) or $email == '') {
-            $this->addError('Please enter a E-Mail-Address');
-        } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $this->addError('This E-Mail-Address is invalid');
+        if (empty($firstname)) {
+            $this->addError('Please enter your Firstname');
         }
-        // Create more checkpoints...
+
+        // Only letters and bind
+        $hasLetters = $this->filterRegex($firstname, '/[A-Za-z\-]+/');
+        if (!$hasLetters) {
+            $this->addError('Please use for your Firstname, only letters');
+        } else if (strlen($firstname) < $this->minTextLength) {
+            $this->addError(sprintf('The Firstname should be at least %d characters long.', $this->minTextLength));
+        }
     }
 
     /**
      * 
-     * @param type $name
+     * @param string $lastname
      */
-    public function validateName($name)
+    public function validateLastName(string $lastname = '')
+    {
+        if (empty($lastname)) {
+            $this->addError('Please enter your Lastname');
+        }
+
+        // Only letters and bind
+        $hasLetters = $this->filterRegex($lastname, '/[A-Za-z\-]+/');
+        if (!$hasLetters) {
+            $this->addError('Please use for your Lastname, only letters');
+        } else if (strlen($lastname) < $this->minTextLength) {
+            $this->addError(sprintf('The Lastname should be at least %d characters long.', $this->minTextLength));
+        }
+    }
+
+    /**
+     * 
+     * @param string $name
+     */
+    public function validateName(string $name = '')
     {
         if (empty($name)) {
             $this->addError('Please enter your Username');
@@ -61,50 +85,73 @@ class UserValidator extends \Modal\Validator
         $hasLetters = $this->filterRegex($name, '/[A-Za-z\-]+/');
         if (!$hasLetters) {
             $this->addError('Please use for your Username, only letters');
+        } else if (strlen($name) < $this->minTextLength) {
+            $this->addError(sprintf('The Username should be at least %d characters long.', $this->minTextLength));
         }
     }
 
     /**
      * 
-     * @param type $password
+     * @param string $email
+     * 
+     * @see http://php.net/manual/de/filter.examples.sanitization.php
      */
-    public function validatePassword($password)
+    public function validateEmail(string $email = '')
+    {
+        $email = filter_var($email, FILTER_SANITIZE_EMAIL);
+
+        if (empty($email) or $email == '') {
+            $this->addError('Please enter a E-Mail-Address');
+        } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $this->addError('This E-Mail-Address is invalid');
+        } else if (strlen($email) < $this->minTextLength) {
+            $this->addError(sprintf('The email should be at least %d characters long.', $this->minTextLength));
+        }
+        // Create more checkpoints...
+    }
+
+    /**
+     * 
+     * @param string $password
+     */
+    public function validatePassword(string $password = '')
     {
         $this->passcheck = $password;
 
-        // Ermittlung aller benutzten Zeichen
+        // Determination of all characters used
         $usedChars = count_chars($password, 1);
 
-        // Es kommt min. ein Buchstabe A-Z vor
+        // There is at least one letter A-Z
         $hasLetters = $this->filterRegex($password, '/[A-Z]+/');
 
-        // Es kommt min. ein Buchstabe a-z vor
+        // There is at least one letter a-z
         $hasSmallLetters = $this->filterRegex($password, '/[a-z]+/');
 
-        // Es kommt min. eine Zahl vor
+        // There is at least one number
         $hasNumbers = $this->filterRegex($password, '/\d+/');
 
-        // Es kommt min. ein Sonderzeichen vor
+        // There is at least one special character
         $hasSpecialChars = $this->filterRegex($password, '/[_\W]+/');
 
         if (empty($password)) {
             $this->addError('Please enter your Password');
-            //        } else if (strlen($this->password) < $this->minLength) {
-            //            $this->addError(sprintf('Das Passwort sollte mindestens %d Zeichen lang sein.', $this->minLength));
-            //        } else if (count($usedChars) < (strlen($this->password) / 2)) {
-            //            $this->addError('Das Passwort sollte zu mindestens 50 Prozent unterschiedliche Zeichen enthalten.');
-            //        } else if (($hasLetters === false) || ($hasSmallLetters === false) || ($hasNumbers === false) || ($hasSpecialChars === false)) {
-            //            $this->addError('Das Passwort sollte Großbuchstaben, Kleinbuchstaben, Zahlen und Sonderzeichen enthalten.');
-        } else if (($this->mailcheck && stristr($password, $this->mailcheck) !== false)) {
-            $this->addError('The password should not contain any private data that you enter here, e.g. E-mail address');
-        }
+//        } else if (strlen($this->password) < $this->minPassLength) {
+//            $this->addError(sprintf('The password should be at least %d characters long.', $this->maxPassLength));
+        } else if (count($usedChars) < (strlen($this->password) / 2)) {
+            $this->addError('The password should contain at least 50 percent different characters.');
+//        } else if (($hasLetters === false) || ($hasSmallLetters === false) || ($hasNumbers === false) || ($hasSpecialChars === false)) {
+//            $this->addError('The password should contain uppercase letters, lowercase letters, numbers and special characters.');
+        } 
+//        else if (($this->mailcheck && stristr($password, $this->mailcheck) !== false)) {
+//            $this->addError('The password should not contain any private data that you enter here, e.g. E-mail address');
+//        }
     }
 
     /**
      * 
-     * @param type $password
+     * @param string $password
      */
-    public function validatePasswordCheck($password)
+    public function validatePasswordCheck(string $password = '')
     {
         if (!$password) {
             $this->addError('Please enter a Password recovery');
@@ -117,27 +164,45 @@ class UserValidator extends \Modal\Validator
 
     /**
      * 
-     * @param type $accept
+     * @param array $meta
      */
-    public function validateAccept($accept)
+    public function validateMeta(array $meta = array())
+    {
+        if (is_array($meta)) {
+            foreach ($meta as $met => $me) {
+                if ($met == 'regagb') {
+                    if (1 != $me) {
+                        $msg = __('The GTCs were not accepted. You must accept our terms and conditions to register.');
+                        FrontView::setMessage('error', $msg);
+                        $this->addError($msg);
+                    }
+                } else {
+                    if ($me == '') {
+                        $msg = __('The Meta ' . $met . ' field is blank');
+                        FrontView::setMessage('error', $msg);
+                        $this->addError($msg);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 
+     * @param integer $accept
+     */
+    public function validateRole(int $role = 0)
     {
         //..
     }
 
     /**
      * 
-     * @param type $token
+     * @param string $accept
      */
-    public function validateCsrfToken($token)
+    public function validateAccept(string $accept = '')
     {
-        $maxTime = 20;
-
-        if (false === isset($_SESSION['csrf-token']) || md5($_SESSION['csrf-token']) != $token) {
-            $this->addError('<b>Security problem:</b> Invalid form token discovered. Please try again.');
-        }
-
-        if (isset($_SESSION['csrf-time']) && ($_SESSION['csrf-time'] + $maxTime) < time()) {
-            $this->addError('<b>Security problem:</b> Invalid form token discovered, the time of the token has expired. Please try again.');
-        }
+        //..
     }
+
 }

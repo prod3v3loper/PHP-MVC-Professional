@@ -1,13 +1,12 @@
 <?php
 
-/**
- * Add more class folders in class and use it with namespase use
- */
-
-namespace System\DB;
+namespace core\classes\db;
 
 /**
- * Singleton DB
+ * Description of DBM
+ * 
+ * Singleton data base manager
+ * 
  * Objects are always passed in references
  * 
  * @author      prod3v3loper
@@ -18,112 +17,86 @@ namespace System\DB;
  * @version     1.0
  * @since       1.0
  */
-class DBM
+class DBM extends DBM_Abstract
 {
     /**
      * Record instance of the database
      * 
-     * @var type object
+     * @var object
      */
-    static private $instance = null;
+    private static $instance = null;
 
     /**
      * Database connection 
      * 
-     * @var type object
+     * @var object
      */
     private $DBH = null;
 
-    /**
-     * Constructor init
-     */
     private function __construct()
     {
         $this->init();
     }
 
-    /**
-     * Prevent db clone
-     */
     private function __clone()
     {
-        //..
+        //.. Clone not allowed
     }
 
     /**
      * Initiate the db
+     * 
+     * @see https://www.php.net/manual/de/pdostatement.fetch.php - PHP Doc pdo mode
      */
     private function init()
     {
-        // PDO options
-        $DB_OPTIONS = array(
-            \PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
-            \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC, // Enable database data as an object
-            \PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true, // Collects data and sends them together to relieve the DB
-            \PDO::ATTR_PERSISTENT => true, // Caching for a single user, that speeds up the whole thing
-            \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION // Error exeptions
-        );
+        if (DB_DSN && DB_USER && DB_PASS && DB_NAME && DB_PREFIX) {
+            
+            $DB_OPTIONS = array(
+                \PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
+                \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC, // Returns an array indexed by column name as returned in your result se
+                \PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true, // Collects data and sends them together to relieve the DB
+                \PDO::ATTR_PERSISTENT => true, // Caching for a single user, that speeds up the whole thing
+                \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION // Error exeptions
+            );
 
-        try {
-
-            // PDO connect with db
-            $this->DBH = new \PDO(DB_DSN, DB_USER, DB_PASS, $DB_OPTIONS);
-
-            // Create project tables
-            $createTable = "CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "user` (
-                                `ID` INT(11) AUTO_INCREMENT PRIMARY KEY, 
-                                firstname VARCHAR(255) NOT NULL, 
-                                lastname VARCHAR(255) NOT NULL, 
-                                name VARCHAR(100) NOT NULL, 
-                                email VARCHAR(255) NOT NULL, 
-                                password VARCHAR(255) NOT NULL, 
-                                oldPassword VARCHAR(255) NOT NULL, 
-                                meta TEXT NOT NULL, 
-                                role TINYINT(1) NOT NULL, 
-                                accept TINYINT(1) NOT NULL, 
-                                created INT(11) NOT NULL, 
-                                updated INT(11) NOT NULL
-                            ) ENGINE=MyISAM  DEFAULT CHARSET=utf8";
-
-            $stmt = $this->DBH->prepare($createTable);
-            if (!$stmt->execute()) {
-                //                $stmt->errorInfo();
+            try {
+                $this->DBH = new \PDO(DB_DSN, DB_USER, DB_PASS, $DB_OPTIONS);
+                $this->setupDatabase(DB_NAME);
+            } catch (\PDOException $e) {
+                if (DEBUG) {
+                    echo '<div style="color:red;">'
+                    . '<pre>' . $e . '</pre>'
+                    . '</div>';
+                    // Error handling (e.g. email to admin)
+                    die();
+                }
             }
-
-            // Creat more project tables
-
-        } catch (\PDOException $e) {
-
-            // Catch errors
-            echo '<div style="color:red;">'
-                . '<pre>' . $e . '</pre>'
-                . '</div>';
-
-            // Error handling (e.g. email to admin)
-            die();
         }
     }
 
     /**
      * DB instance
      * 
-     * @return type object
+     * @return object
      */
-    static public function get_instance()
+    public static function getInstance()
     {
         if (null === self::$instance) {
             self::$instance = new self();
         }
+
         return self::$instance;
     }
 
     /**
      * DB connection
      * 
-     * @return type object
+     * @return object
      */
-    public function get_connection()
+    public function getConnection()
     {
         return $this->DBH;
     }
+
 }

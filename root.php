@@ -1,17 +1,6 @@
 <?php
 
 /**
- * If debug true in settings
- */
-if (DEBUG) {
-    // Overwrite ini settings debug
-    ini_set('html_errors', 1);
-    ini_set('error_reporting', -1); // E_ALL
-    ini_set('display_errors', 1); // On
-    error_reporting(-1); // Report all
-}
-
-/**
  * Define dynamic project root to read, create and link
  * 
  * PROJECT_DOCUMENT_ROOT = Project complete root path
