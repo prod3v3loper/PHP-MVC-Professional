@@ -48,7 +48,7 @@ class IndexController extends AbstractController
             "content" => "<h2>Welcome to the Melabuai MVC Homepage</h2><p>This MVC is an <b>Professional</b> Model View Controller</p>",
             "image" => PROJECT_HTTP_ROOT . DIRECTORY_SEPARATOR . "core/img/home.jpg"
         ));
-
+        
         V::display();
     }
 

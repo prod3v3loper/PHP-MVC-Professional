@@ -19,25 +19,25 @@ define('DEBUG_ADMIN_MAIL', ''); // Send errors to this email
 /**
  * Database setting
  */
-define('DB_PREFIX', '');
-define('DB_HOST', 'localhost');
-define('DB_PORT', '3306');
-define('DB_NAME', '');
+define('DB_PREFIX', getenv('DB_PREFIX'));
+define('DB_HOST', getenv('DB_HOST'));
+define('DB_PORT', getenv('DB_PORT'));
+define('DB_NAME', getenv('DB_NAME'));
 define('DB_DSN', 'mysql:host=' . DB_HOST . ':' . DB_PORT . ';dbname=' . DB_NAME);
-define('DB_USER', 'root');
-define('DB_PASS', 'password');
+define('DB_USER', getenv('DB_USER'));
+define('DB_PASS', getenv('DB_PASS'));
 
 /**
  * SMTP Mail setting
  */
-define('MAIL_HOST', '');
-define('MAIL_USERNAME', '');
-define('MAIL_PASSWORD', '');
-define('MAIL_PORT', 587);
-define('MAIL_SECURE', 'tls');
-define('MAIL_FROM', '');
+define('MAIL_HOST', getenv('MAIL_HOST'));
+define('MAIL_USERNAME', getenv('MAIL_USERNAME'));
+define('MAIL_PASSWORD', getenv('MAIL_PASSWORD'));
+define('MAIL_PORT', getenv('MAIL_PORT'));
+define('MAIL_SECURE', getenv('MAIL_SECURE'));
+define('MAIL_FROM', getenv('MAIL_FROM'));
 define('MAIL_FROM_NAME', '');
-define('MAIL_ADMIN', '');
+define('MAIL_ADMIN', getenv('MAIL_ADMIN'));
 define('MAIL_ADMIN_NAME', '');
 
 /**

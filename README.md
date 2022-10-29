@@ -315,23 +315,19 @@ If language file exists you can call the language via:
 
 # Settings
 
-The database connections are defined in settings.php. Change the data in the `settings.php`:
+The database connections are defined in .env Create a `.env` file:
 
 ## Database
 
-In file `settings.php`
+In file `.env`
 
 ```php
-/**
- * Database setting
- */
-define('DB_PREFIX', 'w_');
-define('DB_HOST', 'localhost');
-define('DB_PORT', '3306');
-define('DB_NAME', 'dbname');
-define('DB_DSN', 'mysql:host=' . DB_HOST . ':' . DB_PORT . ';dbname=' . DB_NAME);
-define('DB_USER', 'root');
-define('DB_PASS', 'password');
+DB_PREFIX=
+DB_HOST=localhost
+DB_PORT=3306
+DB_NAME=dbname
+DB_USER=root
+DB_PASS=password
 ```
 
 ## MAIL
@@ -339,21 +335,17 @@ define('DB_PASS', 'password');
 To activate the mail function, download [PHPMailer](https://github.com/PHPMailer/PHPMailer) and create a folder `ext` in `core` dir `core/ext`.
 Now move your PHPMailer in the folder e.g. `core/ext/phpmailer-6.5.5` that's it.
 
-Add your SMTP data in `settings.php`
+Add your SMTP data in `.env`
 
 ```php
-/**
- * SMTP Mail setting
- */
-define('MAIL_HOST', '');
-define('MAIL_USERNAME', '');
-define('MAIL_PASSWORD', '');
-define('MAIL_PORT', 587);
-define('MAIL_SECURE', 'tls');
-define('MAIL_FROM', '');
-define('MAIL_FROM_NAME', '');
-define('MAIL_ADMIN', '');
-define('MAIL_ADMIN_NAME', '');
+MAIL_HOST=
+MAIL_SMTP=tls
+MAIL_PORT=587
+MAIL_CHARSET=UTF-8
+MAIL_USERNAME=
+MAIL_PASSWORD=
+MAIL_MAIL_FROM=
+MAIL_ADMIN=
 ```
 
 ## DEBUG
