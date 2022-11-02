@@ -18,6 +18,24 @@ use View\FrontView as V,
  */
 class AdminController extends AbstractController
 {
+    /**
+     *
+     * @var object $user
+     */
+    private $user = null;
+
+    /**
+     * 
+     */
+    public function __construct()
+    {
+        $this->user = new User();
+        if (!$this->user->loggedIn()) {
+            header('Location: ' . PROJECT_HTTP_ROOT . DIRECTORY_SEPARATOR . 'user/login/', true, 302);
+        }
+        
+        $this->user = User::findById((int) $_SESSION['user-id']);
+    }
 
     /**
      * This is the first action called on default
@@ -27,13 +45,6 @@ class AdminController extends AbstractController
      */
     public function dashAction(array $params = [])
     {
-        $user = new User();
-        if (!$user->loggedIn()) {
-            header('Location: ' . PROJECT_HTTP_ROOT . DIRECTORY_SEPARATOR . 'user/login/', true, 302);
-        }
-        
-        $user = User::findById((int) $_SESSION['user-id']);
-        
         V::addContext('data', array(
             'templates' => array(
                 'header',
@@ -45,9 +56,9 @@ class AdminController extends AbstractController
             'title' => 'Dashboard',
             'description' => 'Admin Dashboard',
             'nav-active' => 'dash',
-            'content' => '<h2>Admin</h2><p><b>Welcome</b> ' . $user->getName() . ',<br><i>This is your dashboard</i>. Create more sites for admin and build your site.</p>',
+            'content' => '<h2>Admin</h2><p><b>Welcome</b> ' . $this->user->getName() . ',<br><i>This is your dashboard</i>. Create more sites for admin and build your site.</p>',
             'image' => PROJECT_HTTP_ROOT . DIRECTORY_SEPARATOR . "core/img/home.jpg",
-            'user' => $user
+            'user' => $this->user
         ));
 
         V::display();
