@@ -286,7 +286,20 @@ require_once DOCUMENT_ROOT . DIRECTORY_SEPARATOR . 'core/classes/';
 
 # LANGUAGE
 
-English is the first language and other language ever translated from that.
+English is the first and main language, all other languages ever translated from that.
+
+To translate string use the follwed functions:
+
+```php
+_e('Username'); // This echos the output
+```
+
+or use for later echo the output
+
+```php
+$variable = '# ' . __('Username');
+echo $variable;
+```
 
 The languages files are in `includes` folder e.g. `de_DE.json`
 
@@ -300,6 +313,15 @@ The languages files are in `includes` folder e.g. `de_DE.json`
 ```
 
 You can add other langauges, create another file with `tr_TR.json` or language you want.
+
+```json
+{
+  "Username": "Kullanıcı adı",
+  "E-Mail-Address": "E-Posta Adresi",
+  "Message": "İleti",
+  "Send": "Gönder"
+}
+```
 
 If language file exists you can call the language via:
 
