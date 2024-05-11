@@ -2,7 +2,8 @@
 
     <main role="main" class="mb-main l-col--16">
         <article class="article">
-            <?php echo $data["content"]; ?>
+            <h2><?php echo $data['title']; ?></h2>
+            <p><?php echo $data["content"]; ?></p>
         </article>
     </main>
 

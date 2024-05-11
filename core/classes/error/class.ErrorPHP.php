@@ -19,13 +19,13 @@ class ErrorPHP
 {
     /**
      *
-     * @var object 
+     * @var object $DBH
      */
     private $DBH = null;
 
     /**
      *
-     * @var bool 
+     * @var bool $fileHandle
      */
     private $fileHandle = false;
 
@@ -72,15 +72,15 @@ class ErrorPHP
     /**
      * Error handling
      * 
-     * @param type $errorcode
-     * @param type $errortext
-     * @param type $errorfile
-     * @param type $errorline
+     * @param string $errorcode
+     * @param string $errortext
+     * @param string $errorfile
+     * @param string $errorline
      */
     public function errorHandler($errorcode, $errortext, $errorfile, $errorline)
     {
         // Screen errors on website
-        if (( in_array($errorcode, $GLOBALS['error-screen']) ) && ( DEBUG_DISPLAY === true )) {
+        if ((in_array($errorcode, $GLOBALS['error-screen'])) && (DEBUG_DISPLAY === true)) {
             $output = "<fieldset class='error'>";
             $output .= "<legend class='errorInfo'>" . $this->errortypes[$errorcode] . "</legend>";
             $output .= "<b>Error:</b>&nbsp;" . $errortext . "<br><br>";
@@ -99,7 +99,7 @@ class ErrorPHP
         if (in_array($errorcode, $GLOBALS['error-log']) && defined('DEBUG_LOG') && DEBUG_LOG === true) {
             $this->writeErrorLog($this->errortypes[$errorcode], $errortext, $errorfile, $errorline);
         }
-        
+
         // Send errors per mail
         if (in_array($errorcode, $GLOBALS['error-mail']) && defined('DEBUG_MAIL_LOG') && DEBUG_MAIL_LOG === true) {
             $this->sendErrorLog($this->errortypes[$errorcode], $errortext, $errorfile, $errorline);
@@ -109,16 +109,17 @@ class ErrorPHP
     /**
      * Save error in db
      * 
-     * @param type $errortype
-     * @param type $errormessage
-     * @param type $errorfile
-     * @param type $errorline
+     * @param string $errorcode
+     * @param string $errortext
+     * @param string $errorfile
+     * @param string $errorline
      */
     private function saveErrorLog($errortype, $errormessage, $errorfile, $errorline)
     {
         if ($this->DBH) {
+
             $errorDBlogSQL = "INSERT 
-                                INTO `" . DB_PREFIX . "error` (type,error,script,line,created) 
+                                INTO `" . DB_PREFIX . "error` (`type`, `error`, `script`, `line`, `created`) 
                               VALUES(?,?,?,?,?)";
             $stmt = $this->DBH->prepare($errorDBlogSQL);
 
@@ -141,10 +142,10 @@ class ErrorPHP
     /**
      * Send error to admin
      * 
-     * @param type $errortype
-     * @param type $errormessage
-     * @param type $errorfile
-     * @param type $errorline
+     * @param string $errorcode
+     * @param string $errortext
+     * @param string $errorfile
+     * @param string $errorline
      */
     private function sendErrorLog($errortype, $errormessage, $errorfile, $errorline)
     {
@@ -158,7 +159,12 @@ class ErrorPHP
         $error .= '<p><small>Administrator</small></p>';
 
         $simpleMailer = new SM();
-        if (DEBUG_ADMIN_MAIL && !$simpleMailer->sendMail(DEBUG_ADMIN_MAIL, 'Test', $error)) {
+        $args = [
+            'to' => DEBUG_ADMIN_MAIL,
+            'subject' => 'Test',
+            'body' => $error
+        ];
+        if (DEBUG_ADMIN_MAIL && !$simpleMailer->sendMail($args)) {
             if (defined('DEBUG_LOG') && DEBUG_LOG === true) {
                 $this->writeErrorLog('Send error', 'mail failed', __FILE__, __LINE__);
             }
@@ -168,10 +174,10 @@ class ErrorPHP
     /**
      * Write error log file
      * 
-     * @param type $errortype
-     * @param type $errormessage
-     * @param type $errorfile
-     * @param type $errorline
+     * @param string $errorcode
+     * @param string $errortext
+     * @param string $errorfile
+     * @param string $errorline
      * 
      * @see https://www.php.net/manual/de/function.is-writable.php
      * @see http://php.net/manual/de/function.fopen.php
@@ -190,24 +196,23 @@ class ErrorPHP
         $error .= $errorline . "\r\n";
 
         if (file_exists(DEBUG_LOG_FILE) && !is_writable(DEBUG_LOG_FILE)) {
-//            die('Error log file not writable: ' . DEBUG_LOG_FILE);
+            // die('Error log file not writable: ' . DEBUG_LOG_FILE);
         }
 
         if (!$this->fileHandle = fopen(DEBUG_LOG_FILE, 'a+')) {
-//            die('Can\'t open error log file: ' . DEBUG_LOG_FILE);
+            // die('Can\'t open error log file: ' . DEBUG_LOG_FILE);
         }
 
         if (fwrite($this->fileHandle, $error) === FALSE) {
-//            die('Can\'t write error log file: ' . DEBUG_LOG_FILE);
+            // die('Can\'t write error log file: ' . DEBUG_LOG_FILE);
         }
 
         if (is_resource($this->fileHandle)) {
             fclose($this->fileHandle);
         } else {
-//            die('Can\'t close error log file is not a resource: ' . DEBUG_LOG_FILE . PHP_EOL . $error);
+            // die('Can\'t close error log file is not a resource: ' . DEBUG_LOG_FILE . PHP_EOL . $error);
         }
-        
+
         chmod(DEBUG_LOG_FILE, 0600);
     }
-
 }

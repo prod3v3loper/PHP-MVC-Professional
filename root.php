@@ -9,4 +9,4 @@
  */
 define('PROJECT_DOCUMENT_ROOT', __DIR__);
 define('DOCUMENT_ROOT', str_replace(PROJECT_DOCUMENT_ROOT, '', str_replace(filter_input(INPUT_SERVER, 'DOCUMENT_ROOT'), '', str_replace("\\", "/", __DIR__))));
-define('PROJECT_HTTP_ROOT', get_protocol() . get_host() . DOCUMENT_ROOT);
+define('PROJECT_HTTP_ROOT', get_protocol() . get_host() . $GLOBALS['PATH'] . DOCUMENT_ROOT);

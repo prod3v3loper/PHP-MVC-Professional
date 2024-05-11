@@ -22,21 +22,21 @@ class Model extends ModelAbstract
     /**
      * Database object
      * 
-     * @var Object
+     * @var object $DBH
      */
     protected static $DBH = null;
 
     /**
      * Database Table placeholder
      * 
-     * @var String
+     * @var string $TABLE
      */
     protected static $TABLE = '';
 
     /**
      * Class entity placeholder
      * 
-     * @var String
+     * @var string $ENTITY
      */
     protected static $ENTITY = '';
 
@@ -62,7 +62,7 @@ class Model extends ModelAbstract
     public static function init()
     {
         // Here we need the DB connection
-//        self::$DBH = (isset($GLOBALS['DBM_PDO_INST']) ? $GLOBALS['DBM_PDO_INST']->getConnection() : null);
+        // self::$DBH = (isset($GLOBALS['DBM_PDO_INST']) ? $GLOBALS['DBM_PDO_INST']->getConnection() : null);
     }
 
     /**
@@ -141,7 +141,7 @@ class Model extends ModelAbstract
      * 
      * @return object
      */
-    public static function findById(int $id = 0)
+    public static function findById(int $id)
     {
         $return = false;
         self::init();
@@ -269,5 +269,4 @@ class Model extends ModelAbstract
 
         return $return;
     }
-
 }

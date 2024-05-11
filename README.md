@@ -12,6 +12,7 @@ At the moment there is (further information will follow):
 - The Model View and Controller folders are named in the same way.
 - Everything that is still needed is in core folder e.g. templates, less, javascript etc.
 - The Autoloader runs independently equal to - https://github.com/prod3v3loper/php-auto-autoloader
+- The Style CSS repo coming soon used in this template.
 - The Database connection is available PDO
 
 # DOCUMENTATION
@@ -436,12 +437,8 @@ possible.
 
 # Authors
 
-**[Samet Tarim](https://www.prod3v3loper.com)** - _All works_
-
-# Supporter
-
-[Hyperly](https://www.hyperly.de)
+**[prod3v3loper](https://www.prod3v3loper.com)** - _All works_
 
 # License
 
-[MIT](https://github.com/prod3v3loper/php-mvc-professional/blob/master/LICENSE) - [prod3v3loper](https://www.tnado.com/author/prod3v3loper/)
+[MIT](https://github.com/prod3v3loper/php-mvc-professional/blob/master/LICENSE)

@@ -12,6 +12,18 @@ if (DEBUG) {
 
 session_start();
 
+$locallist = array(
+    'localhost',
+    '127.0.0.1',
+    'localhost:8000',
+    '127.0.0.1:8000'
+);
+
+$GLOBALS['PATH'] = '';
+if (in_array($_SERVER['HTTP_HOST'], $locallist)) {
+    $GLOBALS['PATH'] = DIRECTORY_SEPARATOR;
+}
+
 // Load core functions we need
 foreach (glob('./core/func' . DIRECTORY_SEPARATOR . '*.php') as $core_func_file) {
     require_once $core_func_file;

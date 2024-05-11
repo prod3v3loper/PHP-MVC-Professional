@@ -36,9 +36,9 @@ define('MAIL_PASSWORD', getenv('MAIL_PASSWORD'));
 define('MAIL_PORT', getenv('MAIL_PORT'));
 define('MAIL_SECURE', getenv('MAIL_SECURE'));
 define('MAIL_FROM', getenv('MAIL_FROM'));
-define('MAIL_FROM_NAME', '');
+define('MAIL_FROM_NAME', getenv('MAIL_FROM_NAME'));
 define('MAIL_ADMIN', getenv('MAIL_ADMIN'));
-define('MAIL_ADMIN_NAME', '');
+define('MAIL_ADMIN_NAME', getenv('MAIL_ADMIN_NAME'));
 
 /**
  * Honeypot
@@ -47,7 +47,7 @@ define('HONEYPOT_LOG_FILE', PROJECT_DOCUMENT_ROOT . DIRECTORY_SEPARATOR . 'core'
 
 /**
  *
- * @global type $GLOBALS['error-default']
+ * @global array $GLOBALS['error-default']
  * @name $error-default  Default array
  */
 $GLOBALS['error-default'] = array(
@@ -65,22 +65,24 @@ $GLOBALS['error-default'] = array(
     E_USER_NOTICE,
     E_USER_DEPRECATED,
     E_STRICT,
-    E_ALL);
+    E_ALL
+);
 
 /**
  *
- * @global type $GLOBALS['error-screen']
+ * @global array $GLOBALS['error-screen']
  * @name $error-screen 
  */
 $GLOBALS['error-screen'] = array(
     E_USER_ERROR,
     E_USER_WARNING,
     E_USER_NOTICE,
-    E_USER_DEPRECATED);
+    E_USER_DEPRECATED
+);
 
 /**
  *
- * @global type $GLOBALS['error-mail']
+ * @global array $GLOBALS['error-mail']
  * @name $error-mail 
  */
 $GLOBALS['error-mail'] = array(
@@ -98,11 +100,12 @@ $GLOBALS['error-mail'] = array(
     E_USER_NOTICE,
     E_USER_DEPRECATED,
     E_STRICT,
-    E_ALL);
+    E_ALL
+);
 
 /**
  *
- * @global type $GLOBALS['error-log']
+ * @global array $GLOBALS['error-log']
  * @name $error-log 
  */
 $GLOBALS['error-log'] = array(
@@ -120,4 +123,5 @@ $GLOBALS['error-log'] = array(
     E_USER_NOTICE,
     E_USER_DEPRECATED,
     E_STRICT,
-    E_ALL);
+    E_ALL
+);

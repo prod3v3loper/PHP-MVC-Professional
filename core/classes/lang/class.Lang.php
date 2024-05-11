@@ -17,7 +17,6 @@ namespace core\classes\lang;
  */
 class Lang
 {
-
     /**
      * 
      * @param string $lang
@@ -41,5 +40,4 @@ class Lang
     {
         return isset($_SESSION['language']) ? $_SESSION['language'] : 'en';
     }
-
 }

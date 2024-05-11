@@ -19,7 +19,7 @@ class FrontView
     /**
      * @var array $context
      */
-    protected static $context = array();
+    protected static $context = [];
 
     /**
      * Display template
@@ -31,7 +31,7 @@ class FrontView
         extract(self::$context);
 
         if ($template) {
-            require_once PROJECT_DOCUMENT_ROOT . DIRECTORY_SEPARATOR . 'core/tpl/' .$template;
+            require_once PROJECT_DOCUMENT_ROOT . DIRECTORY_SEPARATOR . 'core/tpl/' . $template;
         } else {
             require_once PROJECT_DOCUMENT_ROOT . DIRECTORY_SEPARATOR . 'core/tpl/index.php';
         }

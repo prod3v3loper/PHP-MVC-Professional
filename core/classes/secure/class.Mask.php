@@ -15,7 +15,6 @@ namespace core\classes\secure;
  */
 class Mask
 {
-
     /**
      * Before you write something to a file or save it in the database, you have to make data harmless. 
      * Use this function to neutralize all incoming data e.g. rich text editor
@@ -58,8 +57,7 @@ class Mask
         if ($data != NULL) {
             $data = html_entity_decode($data, ENT_QUOTES, "UTF-8");
         }
-        
+
         return $data;
     }
-
 }

@@ -23,14 +23,20 @@ abstract class ValidatorAbstract extends Model
     protected $csrf = '';
 
     /**
+     * 
+     * @var integer $minLifeTime
+     */
+    protected $minLifeTime = 144;
+
+    /**
      * This function set the CSRF token
      * 
-     * @param bool $timer - Activate default timer
-     * @param int $time - Manipulate default timer
+     * @param boolean $timer - Activate default timer
+     * @param integer $time - Manipulate default timer
      */
     public function setCsrf(bool $timer = false, int $time = (+ (0)))
     {
-        mt_srand(microtime(true));
+        mt_srand(floor(microtime(true)));
         if (isset($_SESSION) && !isset($_SESSION['csrf-token'])) {
             $_SESSION['csrf-token'] = mt_rand();
             if (true === $time) {
@@ -62,31 +68,4 @@ abstract class ValidatorAbstract extends Model
         }
         $this->csrf = '';
     }
-
-    /**
-     * CSRF Security token
-     * 
-     * @param string $token
-     */
-    public function validateCsrf($token)
-    {
-        if (false === isset($_SESSION['csrf-token']) || md5($_SESSION['csrf-token']) != $token) {
-            $msg = '<b>' . __('Security problem') . ':</b>' . __('Invalid form token discovered') . ' - ' . __('Please try again');
-            $this->addError($msg);
-        }
-    }
-
-    /**
-     * CSRF Security time
-     * 
-     * @param string $time
-     */
-    public function validateCsrfTime($time)
-    {
-        if (false === isset($_SESSION['csrf-time']) || isset($_SESSION['csrf-time']) && ($_SESSION['csrf-time'] + $this->minLifeTime) < time()) {
-            $msg = '<b>' . __('Security problem') . ':</b>' . __('Time of security has expired') . ' - ' . __('Please try again');
-            $this->addError($msg);
-        }
-    }
-
 }

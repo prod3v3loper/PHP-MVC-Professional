@@ -19,11 +19,8 @@ use core\classes\secure\Mask,
 class FrontController extends AbstractController
 {
     const DEFAULT_CONTROLLER = "Controller\IndexController";
-
     const DEFAULT_ACTION = "indexAction";
-
     const ERROR_CONTROLLER = 'Controller\ErrorController';
-
     const ERROR_ACTION = 'error404Action';
 
     /**
@@ -201,17 +198,28 @@ class FrontController extends AbstractController
             $path = substr($path, strlen($this->getBasePath())); // Then cut off the domain
         }
 
+        if ($GLOBALS['PATH'] != '') {
+            $path = $this->removeFromString('/', $path);
+        }
+
         $this->parts = $path ? explode("/", $path) : []; // Split string 
+
         // Index in the url do not allow, we do not want to see this controller
         if (isset($this->parts[0]) && $this->parts[0] == "index") {
             header("Location: " . PROJECT_HTTP_ROOT . DIRECTORY_SEPARATOR, true, 302);
         }
 
-        if (isset($this->parts[0]) && $this->parts[0] == "de") {
+        Lang::setLang('');
+
+        if (isset($this->parts[0]) && $this->parts[0] == "en") {
+            Lang::setLang("en");
+            array_splice($this->parts, 0, 1);
+        } else if (isset($this->parts[0]) && $this->parts[0] == "de") {
             Lang::setLang("de");
             array_splice($this->parts, 0, 1);
-        } else {
-            Lang::setLang("en");
+        } else if (strlen($this->parts[0]) == 2) {
+            Lang::setLang($this->parts[0]);
+            array_splice($this->parts, 0, 1);
         }
 
         if (count($this->parts) < 5) {
@@ -230,6 +238,32 @@ class FrontController extends AbstractController
         }
     }
 
+    public function removeFromString($find, $in)
+    {
+        // strpos returns the position on found otherwise false
+        $pos = strpos($in, $find);
+        // We need to do a strict check here to make sure
+        if ($pos !== false) {
+            // Remove from array
+            $in = substr($in, 1);
+        }
+        return $in;
+    }
+
+    public function removeFromArray($find, $in)
+    {
+        // array_search returns false if an element is not found
+        $pos = array_search($find, $in);
+        // So we need to do a strict check here to make sure
+        if ($pos !== false) {
+            // Remove from array
+            unset($in[$pos]);
+            // Reset array keys
+            $in = array_values($in);
+        }
+        return $in;
+    }
+
     /**
      * Run controller (class) with action (method) and the parameters
      * 
@@ -240,5 +274,4 @@ class FrontController extends AbstractController
         $this->parseURL();
         call_user_func_array(array(new $this->controller, $this->action), array($this->params));
     }
-
 }

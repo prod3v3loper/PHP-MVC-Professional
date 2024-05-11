@@ -17,20 +17,19 @@ namespace core\classes\db;
  */
 abstract class DBM_Abstract
 {
-
     /**
      * 
      * @param string $dbname
      */
-    protected function setupDatabase(string $dbname = '')
+    protected function setupDatabase(DBM $dbm, string $dbname = '',)
     {
         // Create default database if not exists
-        $this->createDatabase($dbname);
+        $this->createDatabase($dbm, $dbname);
 
         // Create default tables if not exists
-        $this->createUserTable();
-        $this->createContactTable();
-        $this->createErrorTable();
+        $this->createUserTable($dbm);
+        $this->createContactTable($dbm);
+        $this->createErrorTable($dbm);
     }
 
     /**
@@ -38,16 +37,16 @@ abstract class DBM_Abstract
      * 
      * @param string $dbname
      */
-    protected function createDatabase(string $dbname = '')
+    protected function createDatabase(DBM $dbm, string $dbname = '')
     {
         $createDB = "CREATE DATABASE IF NOT EXISTS `" . $dbname . "`";
-        $this->getConnection()->prepare($createDB);
+        $dbm->getConnection()->prepare($createDB);
     }
 
     /**
      * This function create the user table, for login etc.
      */
-    protected function createUserTable()
+    protected function createUserTable(DBM $dbm)
     {
         $userTable = "CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "user` (
                                 `ID` INT(11) AUTO_INCREMENT PRIMARY KEY, 
@@ -64,14 +63,14 @@ abstract class DBM_Abstract
                                 updated INT(11) NOT NULL
                             ) ENGINE=MyISAM  DEFAULT CHARSET=utf8";
 
-        $this->stmt = $this->getConnection()->prepare($userTable);
-        $this->stmt->execute();
+        $stmt = $dbm->getConnection()->prepare($userTable);
+        $stmt->execute();
     }
 
     /**
      * This function create the user table, for login etc.
      */
-    protected function createContactTable()
+    protected function createContactTable(DBM $dbm)
     {
         $contactTable = "CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "contact` (
                                 `ID` INT(11) AUTO_INCREMENT PRIMARY KEY, 
@@ -82,14 +81,14 @@ abstract class DBM_Abstract
                                 created INT(11) NOT NULL 
                             ) ENGINE=MyISAM  DEFAULT CHARSET=utf8";
 
-        $this->stmt = $this->getConnection()->prepare($contactTable);
-        $this->stmt->execute();
+        $stmt = $dbm->getConnection()->prepare($contactTable);
+        $stmt->execute();
     }
 
     /**
      * This function create the user table, for login etc.
      */
-    protected function createErrorTable()
+    protected function createErrorTable(DBM $dbm)
     {
         $errorTable = "CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "error` (
                                 `ID` INT(11) AUTO_INCREMENT PRIMARY KEY, 
@@ -100,8 +99,7 @@ abstract class DBM_Abstract
                                 created INT(11) NOT NULL
                             ) ENGINE=MyISAM  DEFAULT CHARSET=utf8";
 
-        $this->stmt = $this->getConnection()->prepare($errorTable);
-        $this->stmt->execute();
+        $stmt = $dbm->getConnection()->prepare($errorTable);
+        $stmt->execute();
     }
-
 }

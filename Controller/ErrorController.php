@@ -19,7 +19,6 @@ use View\FrontView as V,
  */
 class ErrorController
 {
-
     /**
      * Default
      */
@@ -49,5 +48,4 @@ class ErrorController
         V::display();
         die();
     }
-
 }

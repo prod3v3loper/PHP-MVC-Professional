@@ -24,16 +24,13 @@ class AdminController extends AbstractController
      */
     private $user = null;
 
-    /**
-     * 
-     */
     public function __construct()
     {
         $this->user = new User();
         if (!$this->user->loggedIn()) {
             header('Location: ' . PROJECT_HTTP_ROOT . DIRECTORY_SEPARATOR . 'user/login/', true, 302);
         }
-        
+
         $this->user = User::findById((int) $_SESSION['user-id']);
     }
 
@@ -73,5 +70,4 @@ class AdminController extends AbstractController
         $user = new User();
         $user->logout();
     }
-
 }

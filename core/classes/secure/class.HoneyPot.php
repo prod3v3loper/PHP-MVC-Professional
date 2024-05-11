@@ -20,7 +20,6 @@ use core\classes\server\Server,
  */
 class HoneyPot
 {
-
     /**
      * Log on honeypot
      */
@@ -36,5 +35,4 @@ class HoneyPot
         $_FILE = new File();
         $_FILE->write($content, HONEYPOT_LOG_FILE);
     }
-
 }

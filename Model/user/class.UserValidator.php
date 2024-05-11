@@ -23,10 +23,21 @@ class UserValidator extends \Model\Validator
      * @var integer $minPassLength
      */
     protected $minPassLength = 8;
+
+    /**
+     * @var integer $maxPassLength
+     */
+    protected $maxPassLength = 100;
+
     /**
      * @var integer $minTextLength
      */
     protected $minTextLength = 3;
+
+    /**
+     * @var string $mailcheck
+     */
+    protected $mailcheck = '';
 
     /**
      * @var string $passcheck
@@ -98,13 +109,13 @@ class UserValidator extends \Model\Validator
      */
     public function validateEmail(string $email = '')
     {
-        $email = filter_var($email, FILTER_SANITIZE_EMAIL);
+        $this->mailcheck = filter_var($email, FILTER_SANITIZE_EMAIL);
 
-        if (empty($email) or $email == '') {
+        if (empty($this->mailcheck) or $this->mailcheck == '') {
             $this->addError('Please enter a E-Mail-Address');
-        } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        } else if (!filter_var($this->mailcheck, FILTER_VALIDATE_EMAIL)) {
             $this->addError('This E-Mail-Address is invalid');
-        } else if (strlen($email) < $this->minTextLength) {
+        } else if (strlen($this->mailcheck) < $this->minTextLength) {
             $this->addError(sprintf('The email should be at least %d characters long.', $this->minTextLength));
         }
         // Create more checkpoints...
@@ -119,32 +130,31 @@ class UserValidator extends \Model\Validator
         $this->passcheck = $password;
 
         // Determination of all characters used
-        $usedChars = count_chars($password, 1);
+        $usedChars = count_chars($this->passcheck, 1);
 
         // There is at least one letter A-Z
-        $hasLetters = $this->filterRegex($password, '/[A-Z]+/');
+        $hasLetters = $this->filterRegex($this->passcheck, '/[A-Z]+/');
 
         // There is at least one letter a-z
-        $hasSmallLetters = $this->filterRegex($password, '/[a-z]+/');
+        $hasSmallLetters = $this->filterRegex($this->passcheck, '/[a-z]+/');
 
         // There is at least one number
-        $hasNumbers = $this->filterRegex($password, '/\d+/');
+        $hasNumbers = $this->filterRegex($this->passcheck, '/\d+/');
 
         // There is at least one special character
-        $hasSpecialChars = $this->filterRegex($password, '/[_\W]+/');
+        $hasSpecialChars = $this->filterRegex($this->passcheck, '/[_\W]+/');
 
-        if (empty($password)) {
+        if (empty($this->passcheck)) {
             $this->addError('Please enter your Password');
-//        } else if (strlen($this->password) < $this->minPassLength) {
-//            $this->addError(sprintf('The password should be at least %d characters long.', $this->maxPassLength));
-        } else if (count($usedChars) < (strlen($this->password) / 2)) {
+        } else if (strlen($this->passcheck) < $this->minPassLength) {
+            $this->addError(sprintf('The password should be at least %d characters long.', $this->maxPassLength));
+        } else if (count($usedChars) < (strlen($this->passcheck) / 2)) {
             $this->addError('The password should contain at least 50 percent different characters.');
-//        } else if (($hasLetters === false) || ($hasSmallLetters === false) || ($hasNumbers === false) || ($hasSpecialChars === false)) {
-//            $this->addError('The password should contain uppercase letters, lowercase letters, numbers and special characters.');
-        } 
-//        else if (($this->mailcheck && stristr($password, $this->mailcheck) !== false)) {
-//            $this->addError('The password should not contain any private data that you enter here, e.g. E-mail address');
-//        }
+        } else if (($hasLetters === false) || ($hasSmallLetters === false) || ($hasNumbers === false) || ($hasSpecialChars === false)) {
+            $this->addError('The password should contain uppercase letters, lowercase letters, numbers and special characters.');
+        } else if (($this->mailcheck && stristr($this->passcheck, $this->mailcheck) !== false)) {
+            $this->addError('The password should not contain any private data that you enter here, e.g. E-mail address');
+        }
     }
 
     /**
@@ -205,4 +215,27 @@ class UserValidator extends \Model\Validator
         //..
     }
 
+    /**
+     * CSRF Security token
+     * 
+     * @param string $token
+     */
+    public function validateCsrf($token)
+    {
+        if (false === isset($_SESSION['csrf-token']) || md5($_SESSION['csrf-token']) != $token) {
+            $msg = '<b>' . __('Security problem') . ':</b>' . __('Invalid form token discovered') . ' - ' . __('Please try again');
+            $this->addError($msg);
+        }
+    }
+
+    /**
+     * CSRF Security time
+     */
+    public function validateCsrfTime($time)
+    {
+        if (false === isset($_SESSION['csrf-time']) || isset($_SESSION['csrf-time']) && ($_SESSION['csrf-time']) < $time) {
+            $msg = '<b>' . __('Security problem') . ':</b>' . __('Time of security has expired') . ' - ' . __('Please try again');
+            $this->addError($msg);
+        }
+    }
 }

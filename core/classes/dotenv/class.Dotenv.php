@@ -18,7 +18,7 @@ class Dotenv
     /**
      * The directory where the .env file can be located.
      *
-     * @var string
+     * @var string $path
      */
     protected $path;
 
@@ -62,5 +62,4 @@ class Dotenv
             }
         }
     }
-
 }

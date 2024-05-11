@@ -22,14 +22,14 @@ class DBM extends DBM_Abstract
     /**
      * Record instance of the database
      * 
-     * @var object
+     * @var object $instance
      */
     private static $instance = null;
 
     /**
      * Database connection 
      * 
-     * @var object
+     * @var object $DBH
      */
     private $DBH = null;
 
@@ -51,7 +51,7 @@ class DBM extends DBM_Abstract
     private function init()
     {
         if (DB_DSN && DB_USER && DB_PASS && DB_NAME && DB_PREFIX) {
-            
+
             $DB_OPTIONS = array(
                 \PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
                 \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC, // Returns an array indexed by column name as returned in your result se
@@ -62,12 +62,12 @@ class DBM extends DBM_Abstract
 
             try {
                 $this->DBH = new \PDO(DB_DSN, DB_USER, DB_PASS, $DB_OPTIONS);
-                $this->setupDatabase(DB_NAME);
+                $this->setupDatabase($this, DB_NAME);
             } catch (\PDOException $e) {
                 if (DEBUG) {
                     echo '<div style="color:red;">'
-                    . '<pre>' . $e . '</pre>'
-                    . '</div>';
+                        . '<pre>' . $e . '</pre>'
+                        . '</div>';
                     // Error handling (e.g. email to admin)
                     die();
                 }
@@ -83,7 +83,7 @@ class DBM extends DBM_Abstract
     public static function getInstance()
     {
         if (null === self::$instance) {
-            self::$instance = new self();
+            self::$instance = new DBM();
         }
 
         return self::$instance;
@@ -98,5 +98,4 @@ class DBM extends DBM_Abstract
     {
         return $this->DBH;
     }
-
 }

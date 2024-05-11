@@ -2,10 +2,10 @@
 
 /**
  * 
- * @return type float
+ * @return integer float
  */
-function start_time() {
-
+function start_time()
+{
     $timeExplode = explode(" ", microtime());
     $time = $timeExplode[1] + $timeExplode[0];
     return (float) $time;
@@ -13,11 +13,12 @@ function start_time() {
 
 /**
  * 
- * @param type $timer
- * @return type float
+ * @param integer $timer
+ * 
+ * @return integer float
  */
-function end_time($timer) {
-
+function end_time($timer)
+{
     $timeExplode = explode(" ", microtime());
     $time = $timeExplode[1] + $timeExplode[0];
     $finish = $time - $timer;

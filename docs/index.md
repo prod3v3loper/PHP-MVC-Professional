@@ -34,13 +34,8 @@ possible.
 
 # Authors
 
-**[Samet Tarim](https://www.prod3v3loper.com)** - *All works*
-
-# Supporter
-
-[Tnado](https://www.tnado.com/blog/)
-[Hyperly](https://www.hyperly.de)
+**[prod3v3loper](https://www.prod3v3loper.com)** - *All works*
 
 # License
 
-[MIT](https://github.com/prod3v3loper/php-mvc-professional/blob/master/LICENSE) - [prod3v3loper](https://www.tnado.com/author/prod3v3loper/)
+[MIT](https://github.com/prod3v3loper/php-mvc-professional/blob/master/LICENSE)

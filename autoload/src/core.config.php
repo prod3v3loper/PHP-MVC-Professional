@@ -1,17 +1,5 @@
 <?php
 
-/**
- * Description of Autoload Configuration
- * 
- * @author      Samet Tarim (prod3v3loper)
- * @copyright   (c) 2017, Samet Tarim
- * @link        https://www.tnado.com/
- * @package     Melabuai
- * @subpackage  autoloader
- * @since       1.0
- * @see         https://github.com/prod3v3loper/php-auto-autoloader
- */
-
 // Set this to false so that you no longer see the debugging
 define('MBT_DEBUG_DISPLAY_AUTOLOAD', false);
 // Set this to false so that you no longer see the debugging

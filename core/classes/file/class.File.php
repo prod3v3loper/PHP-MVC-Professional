@@ -15,32 +15,28 @@ namespace core\classes\file;
  * @version     1.0
  * @since       1.0
  */
-class File {
-
+class File
+{
     /**
      * Write function 
      *
      * @param string $filename
      * @param string $content
      */
-    public function write(string $content = '', string $filename = '') {
-
+    public function write(string $content = '', string $filename = '')
+    {
         $filename = $filename != '' ? $filename : 'file.log';
 
         if (!$handle = fopen($filename, "a")) {
-            // print "Can not open file $filename";
-            exit;
+            trigger_error("Can not open file $filename");
         }
-        
+
         if (fwrite($handle, $content) === FALSE) {
-            // print "Can not write in file $filename";
-            exit;
+            trigger_error("Can not write in file $filename");
         }
-        
+
         fclose($handle);
 
-        // Set file rights and only owner can read and edit others not
         chmod($filename, 0600);
     }
-
 }

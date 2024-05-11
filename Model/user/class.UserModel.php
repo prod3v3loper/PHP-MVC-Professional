@@ -15,18 +15,15 @@ namespace Model\user;
  */
 class UserModel extends UserValidator
 {
-    public function __construct()
-    {
-        parent::__construct(); // Inherited Constructor
-    }
-
     /**
+     * INIT
      * 
      * @param string $db
      * @param string $class
      */
     public static function init(string $db = "user", string $class = "\User")
     {
+        parent::init();
         if (defined('DB_PREFIX')) {
             self::$TABLE = DB_PREFIX . $db; // Database table
         }
@@ -38,12 +35,13 @@ class UserModel extends UserValidator
      * 
      * @return bool
      */
-    public function saveObject()
+    public function saveObject(User $user)
     {
+        $return = false;
         if ($this->ID == 0) {
-            $return = $this->insert();
+            $return = $this->insert($user);
         } else if ($this->ID > 0) {
-            $return = $this->update();
+            $return = $this->update($user);
         }
         return $return;
     }
@@ -55,6 +53,7 @@ class UserModel extends UserValidator
      */
     public function remove()
     {
+        $return = false;
         if ($this->ID > 0) {
             $return = $this->delete();
         }
@@ -66,7 +65,7 @@ class UserModel extends UserValidator
      * 
      * @return bool
      */
-    private function insert()
+    private function insert(User $user)
     {
         self::init();
         $return = false;
@@ -74,15 +73,15 @@ class UserModel extends UserValidator
             $sql = "INSERT INTO `" . self::$TABLE . "` (`firstname`,`lastname`,`name`,`email`,`password`,`oldPassword`,`meta`,`role`,`accept`,`created`,`updated`) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
             $stmt = self::$DBH->prepare($sql);
             $stmt->execute(array(
-                $this->firstname,
-                $this->lastname,
-                $this->name,
-                $this->email,
-                $this->password,
-                $this->oldPassword,
-                $this->meta,
-                $this->role,
-                $this->accept,
+                $user->getFirstname(),
+                $user->getLastname(),
+                $user->getName(),
+                $user->getEmail(),
+                $user->getPassword(),
+                $user->getOldPassword(),
+                $user->getMeta(),
+                $user->getRole(),
+                $user->getAccept(),
                 time(),
                 time()
             ));
@@ -96,22 +95,24 @@ class UserModel extends UserValidator
      * 
      * @return bool
      */
-    private function update()
+    private function update(User $user)
     {
         self::init();
         $return = false;
 
         if ($this->isOK()) {
-            $sql = "UPDATE `" . self::$TABLE . "` SET `firstname` = ?, `lastname` = ?, `name` = ?, `email` = ?, `meta` = ?, `role` = ?, `accept` = ?, `updated` = ? WHERE `ID` = ?";
+            $sql = "UPDATE `" . self::$TABLE . "` SET `firstname` = ?, `lastname` = ?, `name` = ?, `email` = ?, `password` = ?, `oldPassword` = ?, `meta` = ?, `role` = ?, `accept` = ?, `updated` = ? WHERE `ID` = ?";
             $stmt = self::$DBH->prepare($sql);
             $stmt->execute(array(
-                $this->firstname,
-                $this->lastname,
-                $this->name,
-                $this->email,
-                $this->meta,
-                $this->role,
-                $this->accept,
+                $user->getFirstname(),
+                $user->getLastname(),
+                $user->getName(),
+                $user->getEmail(),
+                $user->getPassword(),
+                $user->getOldPassword(),
+                $user->getMeta(),
+                $user->getRole(),
+                $user->getAccept(),
                 time(),
                 $this->ID,
             ));
@@ -152,7 +153,7 @@ class UserModel extends UserValidator
         return parent::findAll($order, $type);
     }
 
-    public static function findById(int $id = 0)
+    public static function findById(int $id)
     {
         self::init();
         return parent::findById($id);
@@ -169,5 +170,4 @@ class UserModel extends UserValidator
         self::init();
         return parent::findByAttribute($keys, $vals, $signs);
     }
-
 }

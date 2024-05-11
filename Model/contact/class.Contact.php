@@ -2,7 +2,8 @@
 
 namespace Model\contact;
 
-use core\classes\secure\Mask;
+use core\classes\http\Filter as F,
+    core\classes\secure\Mask as M;
 
 /**
  * Description of Contact
@@ -42,42 +43,59 @@ class Contact extends ContactModel
      */
     protected $created = 0;
 
-    /**
-     * 
-     * @param string $name
-     */
-    public function setName(string $name = '')
+    // SEPCIAL Methods //////////////////////////////////////////////////////////
+
+    public function save()
     {
+        return parent::saveObject($this);
+    }
+
+    // SETTER Methods /////////////////////////////////////////////////////////
+
+    public function setName(string $name)
+    {
+        // Sanitize and mask example string
+        $name = F::sanitizeSTR($name);
+        $name = M::encode($name, true);
+
         $this->name = $name;
     }
 
-    /**
-     * 
-     * @param string $email
-     */
-    public function setEmail(string $email = '')
+    public function setEmail(string $email)
     {
-        // Extra check if needed
-        if (is_string($email) && strlen($email) > 0 && strlen($email) <= 255) {
-            // Mask here input
-            $this->email = Mask::encode($email, true);
-        }
+        // Sanitize and mask example for email
+        $email = F::sanitizeEmail($email);
+        $email = M::encode($email, true);
+
+        $this->email = $email;
     }
 
-    public function setSubject($subject)
+    public function setSubject(string $subject)
     {
+        $subject = F::sanitizeSTR($subject);
+        $subject = M::encode($subject, true);
+
         $this->subject = $subject;
     }
 
-    public function setMessage($message)
+    public function setMessage(string $message)
     {
+        $message = F::sanitizeSTR($message);
+        $message = M::encode($message, true);
+
         $this->message = $message;
     }
 
-    public function setCreated($created)
+    public function setCreated(int $created)
     {
+        // Sanitize and mask example for integer
+        $created = F::sanitizeINT($created);
+        $created = M::encode($created, true);
+
         $this->created = $created;
     }
+
+    // GETTER Methods /////////////////////////////////////////////////////////
 
     public function getName()
     {
@@ -103,5 +121,4 @@ class Contact extends ContactModel
     {
         return $this->created;
     }
-
 }

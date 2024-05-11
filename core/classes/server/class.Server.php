@@ -2,6 +2,8 @@
 
 namespace core\classes\server;
 
+use core\classes\http\Filter as F;
+
 /**
  * Description of Server
  * 
@@ -15,65 +17,24 @@ namespace core\classes\server;
  * @version     1.0
  * @since       1.0
  */
-abstract class Server {
-
-    /**
-     *
-     * @var string 
-     */
-    protected static $HTTP_X_FORWARDED_FOR = '';
-
-    /**
-     *
-     * @var string 
-     */
-    protected static $HTTP_CLIENT_IP = '';
-
-    /**
-     *
-     * @var string 
-     */
-    protected static $REMOTE_ADDR = '';
-
-    /**
-     *
-     * @var string 
-     */
-    protected static $HTTP_USER_AGENT = '';
-
+abstract class Server
+{
     /**
      *  Finds the real IP of the user,
      *  as this can also be hidden behind other information
      *
      *  @return string - Returns the determined IP address
      */
-    public static function getIP() {
-
-        $realIP = 'No IP';
-
-        self::$HTTP_X_FORWARDED_FOR = filter_input(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR', FILTER_DEFAULT);
-        self::$HTTP_CLIENT_IP = filter_input(INPUT_SERVER, 'HTTP_CLIENT_IP', FILTER_DEFAULT);
-        self::$REMOTE_ADDR = filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_DEFAULT);
-
-        // if HTTP_X_FORWARDED_FOR exists ?
-        if (self::$HTTP_X_FORWARDED_FOR) {
-            $realIP = self::$HTTP_X_FORWARDED_FOR;
+    public static function getIP()
+    {
+        $keys = ['HTTP_X_FORWARDED_FOR', 'HTTP_CLIENT_IP', 'REMOTE_ADDR'];
+        foreach ($keys as $key) {
+            $ip = F::server($key);
+            if ($ip && F::validateIP($ip)) {
+                return $ip;
+            }
         }
-        // or is HTTP_CLIENT_IP exists ?
-        else if (self::$HTTP_CLIENT_IP) {
-            $realIP = self::$HTTP_CLIENT_IP;
-        }
-        // If both of the above do not apply, then determine REMOTE_ADDR
-        else {
-            // Convert to readable comma separated (123.25.25.123) IP address
-            $realIP = long2ip(ip2long(self::$REMOTE_ADDR));
-        }
-
-        if (!filter_var($realIP, FILTER_VALIDATE_IP)) {
-            $realIP = 'IP not valid';
-        }
-
-        return $realIP;
+        return '0.0.0.0'; // Fallback
     }
 
     /**
@@ -81,14 +42,9 @@ abstract class Server {
      * 
      *  @return string - Returns the determined HTTP_USER_AGENT
      */
-    public static function getAgent() {
-
-        $httpUserAgent = 'No Agent';
-        self::$HTTP_USER_AGENT = filter_input(INPUT_SERVER, 'HTTP_USER_AGENT', FILTER_DEFAULT);
-        if (self::$HTTP_USER_AGENT) {
-            $httpUserAgent = self::$HTTP_USER_AGENT;
-        }
-        return $httpUserAgent;
+    public static function getAgent()
+    {
+        return F::server('HTTP_USER_AGENT') ? F::server('HTTP_USER_AGENT') : 'No Agent';
     }
 
     /**
@@ -96,9 +52,8 @@ abstract class Server {
      * 
      * @return string - The Hostname
      */
-    public static function getHost() {
-
-        return gethostbyaddr(Server::getIP());
+    public static function getHost()
+    {
+        return gethostbyaddr(self::getIP());
     }
-
 }

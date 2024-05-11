@@ -2,6 +2,9 @@
 
 namespace Model\user;
 
+use core\classes\http\Filter as F,
+    core\classes\secure\Mask as M;
+
 /**
  * Description of User
  * 
@@ -17,6 +20,8 @@ namespace Model\user;
  */
 class User extends UserModel
 {
+    // ATTRIBUTES //////////////////////////////////////////////////////////////
+
     /**
      * @var string $firstname
      */
@@ -75,7 +80,7 @@ class User extends UserModel
     protected $accept = 0;
 
     /**
-     * @var array $meta
+     * @var string $meta
      */
     protected $meta = '';
 
@@ -89,56 +94,74 @@ class User extends UserModel
      */
     protected $updated = 0;
 
+    // MAGIC Methods ///////////////////////////////////////////////////////////
+
     public function __destruct()
     {
-        //        print "Die Klasse " . __CLASS__ . " wurde aus dem spichert entfernt";
+        // For clean the storage
+        // print "The class " . __CLASS__ . " has been removed from storage";
     }
 
     public function __clone()
     {
-        //        print "Sie versuchen die Klasse " . __CLASS__ . " zu klonen";
+        // Clone blocked this way for security
+        // print "They try the class " . __CLASS__ . " to clone";
     }
 
     /**
      * Call on create a attributte outer the class
-     * @todo Create security table and save in db nt allowed accesses
-     * @param type $name
-     * @param type $value
+     * 
+     * @param string $name
+     * @param string $value
      */
-    //    public function __set($name, $value) {
-    ////        print "Die Eigenschaft {$name} soll auf den Wert {$value} in Klasse " . __CLASS__ . " gesetzt werden.";
-    //    }
-    //
-    //    /**
-    //     * Call on read a attributte outer the class
-    //     * @todo Create security table and save in db nt allowed accesses
-    //     * @param type $prop
-    //     */
-    //    public function __get($name) {
-    ////        print "Die Eigenschaft {$name} soll aus Klasse " . __CLASS__ . " ausgelesen werden.";
-    //    }
-    //    
-    //    /**
-    //     * Call on check if attribute exists
-    //     * @param type $name
-    //     */
-    //    public function __isset($name) {
-    ////        print "Ist die Eigenschaft {$name} in Klasse " . __CLASS__ . " vorhanden.";
-    //    }
-    //    
-    //    /**
-    //     * call on delete not exists attribute
-    //     */
-    //    public function __unset($name) {
-    ////        print "Du versuchst eine nicht deklarierte Eigenschaft der Klasse " . __CLASS__ . " zu löschen.";
-    //    }
-    //    /**
-    //     * call on delete not exists attribute
-    //     */
-    //    public function __invoke($name) {
-    ////        print "Du versuchst diese Klasse " . __CLASS__ . " als funktion aufzurufen.";
-    //    }
+    // public function __set($name, $value)
+    // {
+    //     print "The property {$name} should be set to the value {$value} in class " . __CLASS__ . ".";
+    // }
 
+    /**
+     * Call on read a attributte outer the class
+     * 
+     * @param string $name
+     */
+    // public function __get($name)
+    // {
+    //     print "The property {$name} is to be read from class " . __CLASS__ . ".";
+    // }
+
+    /**
+     * Call on check if attribute exists
+     * 
+     * @param string $name
+     */
+    // public function __isset($name)
+    // {
+    //     print "Property {$name} exists in class " . __CLASS__ . ".";
+    // }
+
+    /**
+     * call on delete not exists attribute
+     * 
+     * @param string $name
+     */
+    // public function __unset($name)
+    // {
+    //     print "You are trying to delete an undeclared property of class " . __CLASS__ . ".";
+    // }
+
+    /**
+     * call on delete not exists attribute
+     * 
+     * @param string $name
+     */
+    // public function __invoke($name)
+    // {
+    //     print "You are trying to call this class " . __CLASS__ . " as a function.";
+    // }
+
+    /**
+     * Example to string
+     */
     public function __toString()
     {
         $str = "I am  ";
@@ -150,79 +173,60 @@ class User extends UserModel
         return $str;
     }
 
-    /**
-     * 
-     * @param string $firstname
-     */
-    public function setFirstname(string $firstname = '')
+    // SEPCIAL Methods //////////////////////////////////////////////////////////
+
+    public function save()
     {
+        return parent::saveObject($this);
+    }
+
+    // SETTER Methods ///////////////////////////////////////////////////////////
+
+    public function setFirstname(string $firstname)
+    {
+        // Sanitize and mask example
+        $firstname = F::sanitizeSTR($firstname);
+        $firstname = M::encode($firstname, true);
+
         $this->firstname = ucfirst($firstname);
     }
 
-    /**
-     * 
-     * @param string $lastname
-     */
-    public function setLastname(string $lastname = '')
+    public function setLastname(string $lastname)
     {
         $this->lastname = ucfirst($lastname);
     }
 
-    /**
-     * Use the setter methods for check again before assign
-     * 
-     * @param string $name
-     */
-    public function setName(string $name = '')
+    public function setName(string $name)
     {
-        if (strlen($name) > 0 && strlen($name) <= 100) {
-            $this->name = ucfirst($name);
-        }
+        $this->name = ucfirst($name);
     }
 
-    /**
-     * 
-     * @param string $email
-     */
-    public function setEmail(string $email = '')
+    public function setEmail(string $email)
     {
-        if (is_string($email) && strlen($email) > 0 && strlen($email) <= 255) {
-            //            $this->email = str_replace('@', ' _*_ ', $this->email);
-            $this->email = $email;
-        }
+        $email = F::sanitizeEmail($email);
+        $email = M::encode($email, true);
+
+        // Save the email in other way
+        // $this->email = str_replace('@', ' _*_ ', $this->email);
+
+        $this->email = $email;
     }
 
-    /**
-     * 
-     * @param string $pass
-     */
-    public function setPassword(string $pass = '')
+    public function setPassword(string $pass)
     {
-        if (is_string($pass) && strlen($pass) > 0 && strlen($pass) <= 255) {
-            $this->password = $pass;
-        }
+        $this->password = $pass;
     }
 
-    public function setOldPassword($oldpass)
+    public function setOldPassword(string $oldpass)
     {
-        if (is_string($oldpass) && strlen($oldpass) > 0 && strlen($oldpass) <= 255) {
-            $this->oldPassword = $oldpass;
-        }
+        $this->oldPassword = $oldpass;
     }
 
-    public function setMeta($meta)
+    public function setMeta(array $meta)
     {
-        if (is_array($meta)) {
-            $this->meta = serialize($meta);
-        } else {
-            $this->meta = serialize($meta);
-        }
+        $this->meta = serialize($meta);
     }
 
-    /**
-     * 
-     * @param int $role
-     */
     public function setRole(int $role = 0)
     {
         $this->role = $role;
@@ -233,23 +237,25 @@ class User extends UserModel
         $this->accept = $accept;
     }
 
-    /**
-     * 
-     * @param int $created
-     */
-    public function setCreated(int $created = 0)
+    public function setCreated(int $created)
     {
+        // Sanitize and mask example for integer
+        $created = F::sanitizeINT($created);
+        $created = M::encode($created, true);
+
         $this->created = $created;
     }
 
-    /**
-     * 
-     * @param int $updated
-     */
-    public function setUpdated(int $updated = 0)
+    public function setUpdated(int $updated)
     {
+        // Sanitize and mask example for integer
+        $updated = F::sanitizeINT($updated);
+        $updated = M::encode($updated, true);
+
         $this->updated = $updated;
     }
+
+    // GETTER Methods ///////////////////////////////////////////////////////////
 
     public function getFirstname()
     {
@@ -268,7 +274,9 @@ class User extends UserModel
 
     public function getEmail()
     {
-        //        $this->email = str_replace('@', ' _*_ ', $this->email);
+        // Create the email to the origin
+        // $this->email = str_replace('@', ' _*_ ', $this->email);
+
         return (string) $this->email;
     }
 
@@ -282,9 +290,9 @@ class User extends UserModel
         return $this->oldPassword;
     }
 
-    public function getMeta()
+    public function getMeta($mode = false)
     {
-        return unserialize($this->meta);
+        return $mode === false ? unserialize($this->meta) : $this->meta;
     }
 
     public function getRole()
@@ -306,6 +314,8 @@ class User extends UserModel
     {
         return (int) $this->updated;
     }
+
+    // EXTRA Methods ///////////////////////////////////////////////////////////
 
     /**
      * @see https://www.php.net/manual/de/function.password-hash.php
@@ -329,28 +339,21 @@ class User extends UserModel
         return password_verify($pass, $hash);
     }
 
-    /**
-     * 
-     * @return boolean
-     */
     public function login()
     {
         $user = self::findByAttribute(
-                        array('email'),
-                        array($this->getEmail()),
-                        'ID,email,password'
+            array('email'),
+            array($this->getEmail()),
+            'ID,email,password'
         );
 
         if ($user) {
-            
+
             if ($this->verifyPassword($this->getPassword(), $user->getPassword())) {
-
                 session_regenerate_id();
-
                 $_SESSION['user-logged-in'] = true;
                 $_SESSION['user-logged-in-since'] = time();
                 $_SESSION['user-id'] = $user->getID();
-
                 return true;
             }
         }
@@ -359,6 +362,7 @@ class User extends UserModel
     }
 
     /**
+     * 
      * @see https://www.php.net/manual/de/reserved.variables.session
      */
     public function logout()
@@ -370,10 +374,6 @@ class User extends UserModel
         header("Location: " . PROJECT_HTTP_ROOT . DIRECTORY_SEPARATOR . 'user/login/', true, 302);
     }
 
-    /**
-     * 
-     * @return boolean
-     */
     public function loggedIn()
     {
         if (isset($_SESSION['user-logged-in']) && $_SESSION['user-logged-in'] === true) {
@@ -382,5 +382,4 @@ class User extends UserModel
 
         return false;
     }
-
 }

@@ -22,7 +22,6 @@ use View\FrontView as V,
  */
 class IndexController extends AbstractController
 {
-
     /**
      * This is the first action called on default
      * The parameter is filled in the front controller and is automatically given to every action called
@@ -30,7 +29,7 @@ class IndexController extends AbstractController
      * 
      * Start Site
      * 
-     * @param string $params
+     * @param array $params
      */
     public function indexAction(array $params = [])
     {
@@ -42,20 +41,20 @@ class IndexController extends AbstractController
                 "footer"
             ),
             "robots" => "index, follow, noodp",
-            "title" => "Start",
+            "title" => "Homepage",
             "description" => "Free SEO online tools from tnado take you to the top. Try your site today to optimize on onpage as offpage and much more.",
             "nav-active" => "home",
-            "content" => "<h2>Welcome to the Melabuai MVC Homepage</h2><p>This MVC is an <b>Professional</b> Model View Controller</p>",
+            "content" => "Welcome to the Melabuai MVC Homepage.<br>This <strong>MVC</strong> is an <b>Professional</b> Model View Controller.",
             "image" => PROJECT_HTTP_ROOT . DIRECTORY_SEPARATOR . "core/img/home.jpg"
         ));
-        
+
         V::display();
     }
 
     /**
      * About page
      * 
-     * @param string $params
+     * @param array $params
      */
     public function aboutAction(array $params = [])
     {
@@ -70,7 +69,7 @@ class IndexController extends AbstractController
             "title" => "About us",
             "description" => "Our story about SEO programming optimization with background and all that belongs to it can be found here.",
             "nav-active" => "about",
-            "content" => "<h2>About</h2><p>Whitelabel Framwork easy and understandable.</p>",
+            "content" => "Whitelabel Framwork easy and understandable.",
             "image" => PROJECT_HTTP_ROOT . DIRECTORY_SEPARATOR . "core/img/home.jpg"
         ));
 
@@ -80,7 +79,7 @@ class IndexController extends AbstractController
     /**
      * Blog page
      * 
-     * @param string $params
+     * @param array $params
      */
     public function blogAction(array $params = [])
     {
@@ -106,7 +105,7 @@ class IndexController extends AbstractController
     /**
      * Contact page with form
      * 
-     * @param string $params
+     * @param array $params
      */
     public function contactAction(array $params = [])
     {
@@ -131,8 +130,13 @@ class IndexController extends AbstractController
                  * Save user in db
                  * Call from class.UserModel.php
                  */
-                if ($contact->saveObject()) {
-                    if ($smailer->sendMail($contact->getEmail(), 'Thanks for contact', 'We have received your contact message')) {
+                if ($contact->save()) {
+                    $args = [
+                        'to' => $contact->getEmail(),
+                        'subject' => 'Thanks for contact',
+                        'body' => 'We have received your contact message'
+                    ];
+                    if ($smailer->sendMail($args)) {
                         $contact->addSuccess('Mail send thanks for contact us');
                         $contact->cleanCsrf(); // Clean csrf token on success
                     } else {
@@ -153,7 +157,7 @@ class IndexController extends AbstractController
             "title" => "Contact us",
             "description" => "",
             "nav-active" => "contact",
-            "content" => "<h2>Contact</h2><p>We love to build connection you too ? Then feel ever free and contact us.</p>",
+            "content" => "We love to build connection you too ? Then feel ever free and contact us.",
             "image" => PROJECT_HTTP_ROOT . DIRECTORY_SEPARATOR . "core/img/home.jpg",
             'csrf' => $contact->getCsrf(), // Use in form token
             'success' => $contact->getSuccess(), // All success
@@ -166,7 +170,7 @@ class IndexController extends AbstractController
     /**
      * Support page
      * 
-     * @param string $params
+     * @param array $params
      */
     public function supportAction(array $params = [])
     {
@@ -191,7 +195,7 @@ class IndexController extends AbstractController
     /**
      * Imprint page
      * 
-     * @param string $params
+     * @param array $params
      */
     public function imprintAction(array $params = [])
     {
@@ -206,7 +210,7 @@ class IndexController extends AbstractController
             "title" => "Imprint",
             "description" => "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
             "nav-active" => "imprint",
-            "content" => "<h2>Imprint</h2><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>",
+            "content" => "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
             "image" => PROJECT_HTTP_ROOT . DIRECTORY_SEPARATOR . "core/img/home.jpg"
         ));
 
@@ -216,7 +220,7 @@ class IndexController extends AbstractController
     /**
      * Privacy Page
      * 
-     * @param string $params
+     * @param array $params
      */
     public function privacyAction(array $params = [])
     {
@@ -231,7 +235,7 @@ class IndexController extends AbstractController
             "title" => "Privacy",
             "description" => "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
             "nav-active" => "privacy",
-            "content" => "<h2>Privacy</h2><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>",
+            "content" => "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
             "image" => PROJECT_HTTP_ROOT . DIRECTORY_SEPARATOR . "core/img/home.jpg"
         ));
 
@@ -243,7 +247,7 @@ class IndexController extends AbstractController
      * 
      * Congrulations the first honeypot !!!
      * 
-     * @param string $params
+     * @param array $params
      */
     public function loginAction(array $params = [])
     {

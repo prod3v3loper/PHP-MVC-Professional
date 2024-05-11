@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Aautoloder;
 
@@ -13,59 +13,64 @@ require_once "func.core.php";
  * 
  * This autoloader class Loader have three methods inside that checks for classes
  * 
- * @author      Samet Tarim (prod3v3loper)
- * @copyright   (c) 2017, Samet Tarim
- * @link        https://www.tnado.com/
+ * @author      prod3v3loper
+ * @copyright   (c) 2024, prod3v3loper
+ * @link        https://www.prod3v3loper.com/
  * @package     Melabuai
- * @subpackage  autoloader
- * @since       1.0
+ * @subpackage  Autoloader
+ * @version     1.1
+ * @since       1.1
  * @see         https://github.com/prod3v3loper/php-auto-autoloader
  */
-class Loader extends LoaderHelper {
+class Loader extends LoaderHelper
+{
 
     /**
      * Directory for loop
-     * @var type 
+     * 
+     * @var array $dir
      */
-    private $dir = array();
+    private $dir = [];
 
     /**
      * File for require class
-     * @var type 
+     * 
+     * @var array $file
      */
-    private $file = '';
+    private $file = [];
 
     /**
      * Empty Array for all forced Files and folders
-     * @var type 
+     * 
+     * @var array $list
      */
-    private $list = array();
+    private $list = [];
 
     /**
      * Found state
-     * @var type 
+     * 
+     * @var boolean $found
      */
     protected $found = false;
 
     /**
      * Instance - interface, class, extends classes, abstract classes, trait
-     * @var type 
+     * 
+     * @var string $instance
      */
-    protected $insatnce = '';
+    protected $instance = '';
 
     /**
      * Namespace
-     * @var type 
+     * 
+     * @var string $namespace
      */
     protected $namespace = '';
 
-    /**
-     * Constructor
-     */
-    public function __construct(array $dir) {
-
-        $this->dir = $dir; // Root path dir/folder to force recrusive
-        $this->action(); // Action
+    public function __construct(array $dir)
+    {
+        $this->dir = $dir;
+        $this->action();
 
         if (!file_exists(MBT_CORE_AUTOLOAD_LOG_FOLDER)) {
             mkdir(MBT_CORE_AUTOLOAD_LOG_FOLDER, 0755);
@@ -73,14 +78,12 @@ class Loader extends LoaderHelper {
     }
 
     /**
-     *  Action Handler
+     * We register our autoloader
+     * 
+     * @see http://php.net/manual/de/function.spl-autoload-register.php
      */
-    protected function action() {
-
-        /**
-         * We register our autoloader
-         * @see http://php.net/manual/de/function.spl-autoload-register.php
-         */
+    protected function action()
+    {
         if (version_compare(PHP_VERSION, '5.1.2', '>=')) {
             if (version_compare(PHP_VERSION, '5.3.0', '>=')) {
                 spl_autoload_register(array($this, '__autoload'), true, true);
@@ -88,13 +91,9 @@ class Loader extends LoaderHelper {
                 spl_autoload_register(array($this, '__autoload'));
             }
         } else {
-            // Add alert
             echo 'Ohhh NO Autoload exists, you use a PHP version under 5.1.2';
         }
 
-        /**
-         * Control debug
-         */
         if (MBT_DEBUG_DISPLAY_AUTOLOAD == true) {
             echo $this->logInfo();
         }
@@ -104,88 +103,112 @@ class Loader extends LoaderHelper {
      * This function is the Loader, the heart from autoloader
      * Here we search with 3 different methods, the used classes, interfaces or even abstract classes
      * 
-     * @param type $name
+     * @param string $name
      */
-    protected function __autoload($name) {
-
+    protected function __autoload($name)
+    {
         // Start Site load time needs core performance
         $timeA = start_time();
 
-        $this->insatnce = $name;
+        $this->instance = $name;
 
-        // Get namespace as folder path
-        $classFilePath = str_replace(array("\\", "//"), "/", PROJECT_DOCUMENT_ROOT . DIRECTORY_SEPARATOR . $this->splitInsatnce(true));
+        $classFilePath = '';
+        if (!empty($this->splitInsatnce($this, true))) {
+            // Get namespace as folder path
+            $classFilePath = str_replace(array("\\", "//"), "/", PROJECT_DOCUMENT_ROOT . DIRECTORY_SEPARATOR . $this->splitInsatnce($this, true));
+        }
 
         // Exists a folder with same path as the namespace and is dir
-        if (file_exists($classFilePath) && is_dir($classFilePath) && !empty($this->splitInsatnce(true))) {
+        if ($classFilePath && file_exists($classFilePath) && is_dir($classFilePath)) {
 
             ### This is the fastest way ###
-//            $this->debugInfo['MB_AUTOLOAD_INSTANCE'][] = 'FAST';
+            // $this->debugInfo['MB_AUTOLOAD_INSTANCE'][] = 'FAST';
 
             /**
+             * METHOD I
+             * 
              * If so, then we create the class file. 
              * That means we take the website root path and namespace as a folder path and the classname we put together with these.
              * 
              * ### Example ###
              * 
-             * PATH:        /users/username/projects/sites/website/
-             * NAMESPACE:   modal
-             * CLASS:       AbstractEntity
+             * PROJECT PATH:    /project/site/mywebsite
+             * NAMESPACE:       testclasses
+             * CLASS:           first_class
              * 
-             * Then the result example /users/username/projects/sites/website/modal/class.AbstractEntity.php
+             * Then the result example /project/site/mywebsite/testclasses/class.first_class.php
              */
-            $classFile = $classFilePath . DIRECTORY_SEPARATOR . 'class.' . $this->splitInsatnce() . '.php';
+            $classFile = '';
+            if (!empty($this->splitInsatnce($this))) {
+                $classFile = $classFilePath . DIRECTORY_SEPARATOR . 'class.' . $this->splitInsatnce($this) . '.php';
+            }
 
             // Check if class file exists
-            if (file_exists($classFile) && is_file($classFile)) {
-
-                // Is file exists require
-                require_once $classFile;
+            if ($classFile && file_exists($classFile) && is_file($classFile)) {
+                require_once $classFile; // Is file exists load
             }
             //..
             else {
 
                 ### This method is slightly slower than the first, so 0.03 - 0.05 seconds ###
-//                $this->debugInfo['MB_AUTOLOAD_INSTANCE'][] = 'MIDDLE';
+                // $this->debugInfo['MB_AUTOLOAD_INSTANCE'][] = 'MIDDLE';
 
                 /**
+                 * METHOD II
+                 * 
                  * This function namspace as folder path and force only this path for class file.
                  * This means every file found in this folder is opened and searched for the classname. 
                  * As soon as the used class exists in a file, this is integrated.
                  * 
+                 * ### Example ###
+                 * 
+                 * This file name dont exists as example class.second_class.php we have class.second.php but the name of the class is second_class.
+                 * Then the result example /project/site/mywebsite/testclasses/classes/class.second_class.php
                  */
-                // Otherwise we scan class filepath dir from namespace and get all files to require
-                $this->list = $this->loopDirectory($classFilePath); // Get files
-                $countedFiles = count($this->list['files']); // Count files
-                for ($i = 0; $i < $countedFiles; $i++) { // Loop all files
-                    $this->readFile($this->list['files'][$i]); // Check files for class
+
+                // Otherwise we scan class filepath dir from namespace (/project/site/mywebsite/testclasses/classes) and get all files to require
+                if ($classFilePath && file_exists($classFilePath)) {
+
+                    $this->list = $this->loopDirectory($classFilePath); // Get files
+
+                    if (isset($this->list['files'])) {
+                        $countedFiles = count($this->list['files']); // Count files
+                        for ($i = 0; $i < $countedFiles; $i++) { // Loop all files
+                            $this->readFile($this->list['files'][$i]); // Check files for class
+                        }
+                        $this->saveIndex(); // Write load file
+                    }
                 }
 
-                $this->loadWrite(); // Write load file
-                $this->loadRead(); // Read and load
+                $this->readIndex(); // Read and load
             }
         } else {
 
             ### This method is the slowest, but found class anything where ###
-//            $this->debugInfo['MB_AUTOLOAD_INSTANCE'][] = 'SLOW';
+            // $this->debugInfo['MB_AUTOLOAD_INSTANCE'][] = 'SLOW';
 
             /**
+             * METHOD III
+             * 
              * This method is the slowest, because it scans all your folders. 
              * No matter how much files you have, all are opened, read and searched for the classname.
              * 
              * The complete path is the directory path, that you give the autoloader
-             * DEFAULT: MBT_DOCUMENT_ROOT
+             * DEFAULT: PROJECT_DOCUMENT_ROOT (Project root)
              */
+
             // Get all Files from complete path
             $this->list = $this->loopDirectory();
 
-            $countedFiles = count($this->list['files']); // Count files
-            for ($i = 0; $i < $countedFiles; $i++) { // Loop all files
-                $this->readFile($this->list['files'][$i]); // Check files for class
+            if (isset($this->list['files'])) {
+                $countedFiles = count($this->list['files']); // Count files
+                for ($i = 0; $i < $countedFiles; $i++) { // Loop all files
+                    $this->readFile($this->list['files'][$i]); // Check files for class
+                }
+                $this->saveIndex(); // Write load file
             }
 
-            $this->loadWrite(); // Write load file
-            $this->loadRead(); // Read and load
+            $this->readIndex(); // Read and load
         }
 
         $endTimeA = end_time($timeA);
@@ -194,31 +217,34 @@ class Loader extends LoaderHelper {
         $this->debugInfo[$reuri][$name] = $endTimeA;
 
         file_put_contents(MBT_CORE_AUTOLOAD_LOG_LOGS, serialize($this->debugInfo), LOCK_EX);
-//        chmod(MBT_CORE_AUTOLOAD_LOG_LOGS, 0755);
+        // chmod(MBT_CORE_AUTOLOAD_LOG_LOGS, 0755);
 
-        /**
-         * Control debug
-         */
         if (MBT_DEBUG_DISPLAY_AUTOLOAD_SEARCH == true) {
-           echo $this->getDebug();
+            echo $this->getDebug();
         }
     }
 
     /**
      * Loop all files and read it to found the instance class
      * 
-     * @param type $filepath
+     * @param string $filepath
      */
-    protected function readFile($filepath) {
+    protected function readFile($filepath)
+    {
+        $arr = [];
 
-        $arr = array();
         $this->file = $this->getFile($filepath);
-        if (false != $this->file) {
+
+        if (false !== $this->file && is_array($this->file)) {
+
             foreach ($this->file as $lineNum => $line) {
+
                 // Get actually namespace
-//                $this->getNamespace($line, $arr);
+                // $this->getNamespace($line, $arr, $this);
+
                 // Get actually class
-                $this->getClass($filepath, $line, $arr, $lineNum);
+                $this->getClass($filepath, $line, $arr, $lineNum, $this);
+
                 if ($lineNum > MBT_CORE_AUTOLOAD_READ_MAX_LINES || $this->found == true) {
                     $this->found = false;
                     break; // DEFAULT: 49 lines or by found = true, break the loop
@@ -230,10 +256,10 @@ class Loader extends LoaderHelper {
     /**
      * Get class file
      * 
-     * @return type
+     * @return boolean|array
      */
-    public function getFile($filepath) {
-
+    public function getFile($filepath)
+    {
         $return = false;
         if (file_exists($filepath) && is_file($filepath)) {
             $return = file($filepath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
@@ -242,27 +268,73 @@ class Loader extends LoaderHelper {
     }
 
     /**
-     * Recursive all directorys in MBT_DOCUMENT_ROOT
+     * Recursive all directorys in PROJECT_DOCUMENT_ROOT
      * 
-     * @param type $dir
-     * @param type $results
-     * @return type
+     * @param string $dir
+     * @param array $results
+     * 
+     * @return array
      */
-    public function loopDirectory($dir = NULL, array &$results = array()) {
-
+    public function loopDirectory($dir = NULL, array &$results = [])
+    {
         if ($dir == NULL) {
-            foreach ($this->dir as $direct) {
-                $dir = $direct;
-            }
+            $dir = $this->dir[0];
         }
+
+        $ignoreDirs = [
+            'autoload', 'vendor', '.git', 'node_modules', 'cache', 'logs', 'tests', 'build',
+            'docs', 'documentation', 'assets', 'temp', 'bin', 'backup', 'config',
+            'media', 'public', 'storage', 'resources', 'src', 'templates', 'views',
+            'uploads', 'scripts', '.idea', 'dist', 'log', 'img'
+        ];
+
+        $ignoreFiles = [
+            'composer.json', 'composer.lock', '.env',
+            '.gitignore', '.htaccess', 'phpunit.xml',
+            'README.md', 'LICENSE'
+        ];
+
+        $ignoreExtensions = [
+            'md', 'json', 'yaml', 'yml', 'xml', 'ini', 'log', 'txt',
+            'css', 'js', 'scss', 'less', 'html', 'htm', 'config'
+        ];
 
         $dir = str_replace("//", "/", $dir);
 
-        if (file_exists($dir)) {
+        if (file_exists($dir) && is_dir($dir)) {
+
             $files = array_diff(scandir($dir, 1), array(".", ".."));
-            foreach ($files as $value) {
-                $path = $dir . DIRECTORY_SEPARATOR . $value; // If folder in folder
-                $this->loopSort($path, $results);
+
+            foreach ($files as $file) {
+
+                if ($file == '.' || $file == '..') continue;
+
+                $fullPath = $dir . '/' . $file;
+                $relativePath = str_replace(PROJECT_DOCUMENT_ROOT, '', $fullPath);
+                $pathInfo = pathinfo($fullPath);
+
+                $skip = false;
+
+                foreach ($ignoreDirs as $ignoreDir) {
+                    if (strpos($relativePath, '/' . $ignoreDir . '/') !== false) {
+                        $skip = true;
+                        break;
+                    }
+                }
+
+                if (!$skip && in_array($file, $ignoreFiles)) {
+                    $skip = true;
+                }
+
+                if (!$skip && isset($pathInfo['extension']) && in_array($pathInfo['extension'], $ignoreExtensions)) {
+                    $skip = true;
+                }
+
+                if (!$skip) {
+
+                    $path = $dir . DIRECTORY_SEPARATOR . $file; // If folder in folder
+                    $this->loopSort($path, $results);
+                }
             }
         }
 
@@ -272,10 +344,10 @@ class Loader extends LoaderHelper {
     /**
      * Sort files and folders
      * 
-     * @param type $path
+     * @param string $path
      */
-    private function loopSort($path, array &$results = array()) {
-
+    private function loopSort($path, array &$results = array())
+    {
         if (is_file($path)) {
             $results['files'][] = $path;
         }
@@ -285,5 +357,4 @@ class Loader extends LoaderHelper {
             $this->loopDirectory($path, $results);
         }
     }
-
 }

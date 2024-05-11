@@ -5,45 +5,58 @@ namespace Aautoloder;
 /**
  * Description of Autoload
  * 
- * @author      Samet Tarim (prod3v3loper)
- * @copyright   (c) 2017, Samet Tarim
- * @link        https://www.tnado.com/
+ * @author      prod3v3loper
+ * @copyright   (c) 2024, prod3v3loper
+ * @link        https://www.prod3v3loper.com/
  * @package     Melabuai
- * @subpackage  autoloader
- * @since       1.0
+ * @subpackage  Autoloader
+ * @version     1.1
+ * @since       1.1
  * @see         https://github.com/prod3v3loper/php-auto-autoloader
  */
-class LoaderHelper {
+class LoaderHelper
+{
+    /**
+     * 
+     * @var array $loader
+     */
+    protected $loader = [];
 
     /**
      * 
-     * @var type 
+     * @var array $loadHandler 
      */
-    protected $loader = array();
-
-    /**
-     * 
-     * @var type 
-     */
-    protected $loadHandler = '';
+    protected $loadHandler = [];
 
     /**
      * Debug information
      * 
-     * @var type 
+     * @var array $debugInfo
      */
-    protected $debugInfo = array();
+    protected $debugInfo = [];
+
+    protected function updateIndex()
+    {
+        $newIndex = [];
+        foreach ($this->loader as $classname => $filepath) {
+            if (file_exists($filepath)) {
+                $newIndex[$classname] = $filepath;
+            }
+        }
+        $this->loader = $newIndex;
+        $this->saveIndex();
+    }
 
     /**
      * This function is for the index, a file is a class file and not in the array
      * 
-     * @param type $classname
-     * @param type $filepath
+     * @param string $classname
+     * @param string $filepath
      */
-    protected function loadIndex($classname, $filepath) {
-
+    protected function loadIndex($classname, $filepath)
+    {
         $classname = (string) trim(mb_substr($classname, 0, strpos($classname, ' ')));
-        if ($classname AND ! in_array($classname, array_keys($this->loader))) {
+        if ($classname and !in_array($classname, array_keys($this->loader))) {
             $this->loader[$classname] = $filepath;
         }
     }
@@ -58,23 +71,25 @@ class LoaderHelper {
      * @see http://php.net/manual/de/function.serialize.php
      * @see http://php.net/manual/de/function.file-put-contents.php
      */
-    protected function loadWrite() {
-
+    protected function saveIndex()
+    {
         if (MBT_CORE_AUTOLOAD_INDEX) {
             if (!file_put_contents(MBT_CORE_AUTOLOAD_LOG_FILE, serialize($this->loader), LOCK_EX)) {
-                trigger_error('Can\'t write the autoload loader file ' . MBT_CORE_AUTOLOAD_LOG_FILE, E_USER_WARNING);
+                trigger_error('Can\'t write the autoload index file ' . MBT_CORE_AUTOLOAD_LOG_FILE, E_USER_WARNING);
             } else {
-//                chmod(MBT_CORE_AUTOLOAD_LOG_FILE, 0755);
+                // chmod(MBT_CORE_AUTOLOAD_LOG_FILE, 0755);
             }
         }
     }
 
     /**
-     * This function read the load files and load all needed classes, that not found with PSR-0
+     * This function read the load files and load all needed classes, that not found with PSR-4
      * 
-     * @return boolean
+     * @param boolean $mod
      */
-    protected function loadRead($mod = false) {
+    protected function readIndex($mod = false)
+    {
+        // $this->updateIndex();
 
         /**
          *  @see http://php.net/manual/de/function.file-exists.php
@@ -86,16 +101,17 @@ class LoaderHelper {
              * @see http://php.net/manual/de/function.file-get-contents.php
              */
             $this->loadHandler = unserialize(file_get_contents(MBT_CORE_AUTOLOAD_LOG_FILE));
-            foreach ($this->loadHandler as $class => $classFile) {
-                $info = pathinfo($classFile);
-                if (file_exists($classFile) && $info["extension"] == "php") {
-                    require_once $classFile;
+            if (is_array($this->loadHandler)) {
+                foreach ($this->loadHandler as $class => $classFile) {
+                    $info = pathinfo($classFile);
+                    if (file_exists($classFile) && $info["extension"] == "php") {
+                        require_once $classFile;
+                    }
                 }
             }
         }
         //..
         else {
-
             trigger_error('Can\'t found the autoload loader file ' . MBT_CORE_AUTOLOAD_LOG_FILE, E_USER_WARNING);
         }
     }
@@ -103,14 +119,15 @@ class LoaderHelper {
     /**
      * This function get the actually namespace
      * 
-     * @param type $line
-     * @param type $arr
+     * @param integer $line
+     * @param array $arr
+     * 
      * @return string
      */
-    protected function getNamespace($line, $arr) {
-
+    protected function getNamespace($line, $arr, $obj = NULL)
+    {
         // Get actually namespace
-        $namespaceRegEx = '/((namespace)+\s*(' . preg_quote($this->splitInsatnce(true)) . ');)/';
+        $namespaceRegEx = '/((namespace)+\s*(' . preg_quote($this->splitInsatnce($obj, true)) . ');)/';
         if (preg_match_all($namespaceRegEx, $line, $arr)) {
             // Debug information
             $this->debugInfo[] = '<b>Namespace:</b> <span style="color:blue;">' . $arr[0][0] . '</span>';
@@ -119,29 +136,38 @@ class LoaderHelper {
 
     /**
      * This function get the actually needed class and class filepath
-     * Check extentions for not load wrong files
+     * And check the extension so that the wrong file is not loaded
      * 
      * @todo Check the next line for {
-     * @param type $filepath
-     * @param type $line
-     * @param type $arr
-     * @param type $lineNum
+     * 
+     * @param string $filepath
+     * @param integer $line
+     * @param array $arr
+     * @param integer $lineNum
      */
-    protected function getClass($filepath, $line, $arr, $lineNum) {
-
+    protected function getClass($filepath, $line, $arr, $lineNum, $obj = NULL)
+    {
         // Get actually class
-        $classRegEx = '/((interface|abstract\s+class|class|trait)+\s+(' . preg_quote($this->splitInsatnce()) . ')(.*)\{?)/';
+        $classRegEx = '/((interface|abstract\s+class|class|trait)+\s+(' . preg_quote($this->splitInsatnce($obj)) . ')(.*)\{?)/';
+
         if (preg_match_all($classRegEx, trim($line), $arr)) {
+
             // Founded class
             $class = $arr[3][0];
+
             // Get pathinfo
             $info = pathinfo($filepath);
+
             if (!isset($this->loader[$class]) && file_exists($filepath) && $info["extension"] == "php") {
+
                 // Hold loader class and filepath
                 $this->loader[$class] = $filepath;
+
                 // $this->loadIndex($class, $filepath);
+
                 // Found true for break
-                $this->found = true;
+                $obj->found = true;
+
                 // Debug information
                 $this->debugInfo[] = '<b>NEEDED CLASS</b><br>';
                 $this->debugInfo[] = '<b>Class:</b> <span style="color:lightblue;">' . trim($line) . '</span><br>';
@@ -157,19 +183,19 @@ class LoaderHelper {
      * @uses splitInsatnce(false) For classname
      * @uses splitInsatnce(true) For namespace
      * 
-     * @param type $namespaceORclass
-     * @return type String
+     * @param boolean $namespaceORclass
+     * 
+     * @return string
      */
-    protected function splitInsatnce($namespaceORclass = false) {
-
-        if ($this->insatnce) {
-
-            $this->namespace = explode('\\', $this->insatnce);
-            $getLastForName = count($this->namespace) - 1;
-            $classname = $this->namespace[$getLastForName];
-            unset($this->namespace[$getLastForName]);
+    protected function splitInsatnce($obj = NULL, $namespaceORclass = false)
+    {
+        if ($obj->instance) {
+            $obj->namespace = explode('\\', $obj->instance);
+            $getLastForName = count($obj->namespace) - 1;
+            $classname = $obj->namespace[$getLastForName];
+            unset($obj->namespace[$getLastForName]);
             if ($namespaceORclass == true) {
-                $return = implode('\\', $this->namespace);
+                $return = implode('\\', $obj->namespace);
             } else {
                 $return = $classname;
             }
@@ -181,10 +207,10 @@ class LoaderHelper {
     /**
      * This function gives information for loadtime e.g.
      * 
-     * @return type String
+     * @return string
      */
-    public function logInfo() {
-
+    public function logInfo()
+    {
         $output = '';
         $output .= '<table border="1">';
         $output .= '<tr>';
@@ -219,10 +245,10 @@ class LoaderHelper {
     /**
      * This function gives debug information
      * 
-     * @return type String
+     * @return string
      */
-    public function getDebug() {
-
+    public function getDebug()
+    {
         $output = '';
         $output .= '<table>';
         $output .= '<tr>';
@@ -246,5 +272,4 @@ class LoaderHelper {
 
         return $output;
     }
-
 }

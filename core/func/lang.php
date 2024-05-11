@@ -2,13 +2,12 @@
 
 /**
  * 
- * @param type $echo
- * @param type $args
- * @param type $lang
+ * @param string $echo
+ * @param array $args
  * 
- * @return type
+ * @return string
  */
-function __($echo, $args = array())
+function __($echo, $args = [])
 {
     $return = $echo;
 
@@ -26,10 +25,10 @@ function __($echo, $args = array())
         $langFileInnerDecode = json_decode($langFileInner, true);
         if (is_array($langFileInnerDecode)) {
             foreach ($langFileInnerDecode as $lang => $translated) {
-//            $pos = strpos($echo, $lang);
-//            if ($pos !== false) {
-//                $return = str_replace(substr($echo, $pos, strlen($lang)), $translated, $echo);
-//            }
+                // $pos = strpos($echo, $lang);
+                // if ($pos !== false) {
+                //     $return = str_replace(substr($echo, $pos, strlen($lang)), $translated, $echo);
+                // }
                 if (strtolower($echo) == strtolower($lang)) {
                     $state = starts_with_upper($echo);
                     $return = $state ? ucfirst($translated) : $translated;
@@ -43,11 +42,10 @@ function __($echo, $args = array())
 
 /**
  * 
- * @param type $echo
- * @param type $args
- * @param type $lang
+ * @param string $echo
+ * @param array $args
  */
-function _e($echo, $args = array())
+function _e($echo, $args = [])
 {
     $return = $echo;
 
@@ -66,10 +64,10 @@ function _e($echo, $args = array())
         $langFileInnerDecode = json_decode($langFileInner, true);
         if (is_array($langFileInnerDecode)) {
             foreach ($langFileInnerDecode as $lang => $translated) {
-//            $pos = strpos($echo, $lang);
-//            if ($pos !== false) {
-//                $return = str_replace(substr($echo, $pos, strlen($lang)), $translated, $echo);
-//            }
+                // $pos = strpos($echo, $lang);
+                // if ($pos !== false) {
+                //     $return = str_replace(substr($echo, $pos, strlen($lang)), $translated, $echo);
+                // }
                 if (strtolower($echo) == strtolower($lang)) {
                     $state = starts_with_upper($echo);
                     $return = $state ? ucfirst($translated) : $translated;
@@ -83,9 +81,9 @@ function _e($echo, $args = array())
 
 /**
  * 
- * @param type $str
+ * @param string $str
  * 
- * @return type
+ * @return string
  */
 function starts_with_upper($str)
 {

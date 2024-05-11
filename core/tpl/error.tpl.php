@@ -1,5 +1,5 @@
 <div class="mb-wrap">
-    
+
     <main role="main" class="mb-main l-col--16">
         <article class="article">
             <h3>404 NOT FOUND</h3>

@@ -18,7 +18,7 @@ abstract class ModelAbstract
     /**
      * ID placeholder for all modals
      * 
-     * @var integer 
+     * @var integer $ID
      */
     protected $ID = 0;
 
@@ -35,7 +35,7 @@ abstract class ModelAbstract
     /**
      * Settter for the ID
      * 
-     * @param integer
+     * @param integer|null $ID
      */
     public function setID($ID = NULL)
     {
@@ -49,7 +49,7 @@ abstract class ModelAbstract
      * 
      * @param array $array
      */
-    public function setByArray(array $array = array())
+    public function setByArray(array $array = [])
     {
         if ($array) {
             foreach ($array as $key => $value) {
@@ -60,5 +60,4 @@ abstract class ModelAbstract
             }
         }
     }
-
 }

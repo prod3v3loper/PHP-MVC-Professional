@@ -17,7 +17,7 @@ class ContactValidator extends \Model\Validator
 {
     /**
      * 
-     * @param type $name
+     * @param string $name
      */
     public function validateName(string $name = '')
     {
@@ -65,4 +65,27 @@ class ContactValidator extends \Model\Validator
         }
     }
 
+    /**
+     * CSRF Security token
+     * 
+     * @param string $token
+     */
+    public function validateCsrf($token)
+    {
+        if (false === isset($_SESSION['csrf-token']) || md5($_SESSION['csrf-token']) != $token) {
+            $msg = '<b>' . __('Security problem') . ':</b>' . __('Invalid form token discovered') . ' - ' . __('Please try again');
+            $this->addError($msg);
+        }
+    }
+
+    /**
+     * CSRF Security time
+     */
+    public function validateCsrfTime($time)
+    {
+        if (false === isset($_SESSION['csrf-time']) || isset($_SESSION['csrf-time']) && ($_SESSION['csrf-time']) < $time) {
+            $msg = '<b>' . __('Security problem') . ':</b>' . __('Time of security has expired') . ' - ' . __('Please try again');
+            $this->addError($msg);
+        }
+    }
 }

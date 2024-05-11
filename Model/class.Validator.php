@@ -22,14 +22,14 @@ class Validator extends ValidatorAbstract
      * 
      * @var array $errors
      */
-    protected $errors = array();
+    protected $errors = [];
 
     /**
      * Hold the successes for the validator and more classes
      * 
      * @var array $successes
      */
-    protected $successes = array();
+    protected $successes = [];
 
     /**
      * This function set validate for fields and call the validate function
@@ -128,5 +128,4 @@ class Validator extends ValidatorAbstract
     {
         return empty($this->errors);
     }
-
 }

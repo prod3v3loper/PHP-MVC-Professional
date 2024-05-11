@@ -19,7 +19,6 @@ use View\FrontView as V,
  */
 class UserController extends AbstractController
 {
-
     /**
      * The parameter is filled in the front controller and is automatically given to every action called
      * 
@@ -29,6 +28,7 @@ class UserController extends AbstractController
     {
         $USER = new U;
         $smailer = new SM();
+
         $USER->setCsrf();
 
         // If register form send
@@ -43,8 +43,13 @@ class UserController extends AbstractController
                     $USER->addError('YOU are already registered!');
                 } else {
                     // Save user in db
-                    if ($USER->saveObject()) {
-                        if ($smailer->sendMail($USER->getEmail(), 'Register', 'Please confirm your registriation')) {
+                    if ($USER->save()) {
+                        $args = [
+                            'to' => $USER->getEmail(),
+                            'subject' => 'Register',
+                            'body' => 'Please confirm your registriation'
+                        ];
+                        if ($smailer->sendMail($args)) {
                             $USER->addSuccess('YOU are registered, check your email for complete!');
                             $USER->cleanCsrf();
                         }
@@ -64,9 +69,9 @@ class UserController extends AbstractController
             ),
             'robots' => 'noindex, nofollow, noodp',
             'title' => 'User Register',
-            'description' => 'Free register and use',
+            'description' => 'Form to register user',
             'nav-active' => 'register',
-            'content' => '<h2>Register</h2><p>Content to template inner.</p>',
+            'content' => 'Form to register user',
             'csrf' => $USER->getCsrf(),
             'errors' => $USER->getErrors()
         ));
@@ -84,17 +89,17 @@ class UserController extends AbstractController
         $USER = new U;
 
         // First time add admin
-//        $USER->setFirstname('Firstname');
-//        $USER->setLastname('Lastname');
-//        $USER->setName('Username');
-//        $USER->setEmail('email@tester.test');
-//        $USER->setPassword('chango123#');
-//        $USER->hashPassword();
-//        $USER->setMeta([]);
-//        $USER->setRole(1);
-//        $USER->setAccept(1);
-//        $USER->saveObject();
-//        die();
+        //        $USER->setFirstname('Firstname');
+        //        $USER->setLastname('Lastname');
+        //        $USER->setName('Username');
+        //        $USER->setEmail('email@tester.test');
+        //        $USER->setPassword('chango123#');
+        //        $USER->hashPassword();
+        //        $USER->setMeta([]);
+        //        $USER->setRole(1);
+        //        $USER->setAccept(1);
+        //        $USER->saveObject();
+        //        die();
 
         $USER->setCsrf();
 
@@ -121,9 +126,9 @@ class UserController extends AbstractController
             ),
             'robots' => 'noindex, nofollow, noodp',
             'title' => 'User Login',
-            'description' => 'Free login and use',
+            'description' => 'Form to login user',
             'nav-active' => 'login',
-            'content' => '<h2>Login</h2><p>Content to template inner.</p>',
+            'content' => 'Form to login user',
             'csrf' => $USER->getCsrf(),
             'errors' => $USER->getErrors(),
         ));
@@ -167,10 +172,10 @@ class UserController extends AbstractController
                 "footer"
             ),
             'robots' => 'noindex, nofollow, noodp',
-            'title' => 'Password forget site',
+            'title' => 'Password forget',
             'description' => 'Reset password with email',
             'nav-active' => 'password',
-            'content' => '<h2>Password</h2><p>Content to template inner.</p>',
+            'content' => 'Reset password with email',
             'csrf' => $USER->getCsrf(),
             'errors' => $USER->getErrors(),
         ));

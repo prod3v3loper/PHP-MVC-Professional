@@ -15,19 +15,15 @@ namespace Model\contact;
  */
 class ContactModel extends ContactValidator
 {
-
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     /**
+     * INIT
      * 
-     * @param type $db
-     * @param type $class
+     * @param string $db
+     * @param string $class
      */
     public static function init($db = "contact", $class = "\Contact")
     {
+        parent::init();
         if (defined('DB_PREFIX')) {
             self::$TABLE = DB_PREFIX . $db; // Database table
         }
@@ -37,14 +33,14 @@ class ContactModel extends ContactValidator
     /**
      * SAVE
      * 
-     * @return bool
+     * @return boolean
      */
-    public function saveObject()
+    public function saveObject(Contact $contact)
     {
         if ($this->ID == 0) {
-            $return = $this->insert();
+            $return = $this->insert($contact);
         } else if ($this->ID > 0) {
-            $return = $this->update();
+            $return = $this->update($contact);
         }
         return $return;
     }
@@ -52,7 +48,7 @@ class ContactModel extends ContactValidator
     /**
      * REMOVE
      * 
-     * @return bool
+     * @return boolean
      */
     public function remove()
     {
@@ -65,9 +61,9 @@ class ContactModel extends ContactValidator
     /**
      * INSERT
      * 
-     * @return bool
+     * @return boolean
      */
-    private function insert()
+    private function insert(Contact $contact)
     {
         self::init();
         $return = false;
@@ -75,10 +71,10 @@ class ContactModel extends ContactValidator
             $sql = "INSERT INTO `" . self::$TABLE . "` (`name`,`email`,`subject`,`message`,`created`) VALUES (?,?,?,?,?)";
             $stmt = self::$DBH->prepare($sql);
             $stmt->execute(array(
-                $this->name,
-                $this->email,
-                $this->subject,
-                $this->message,
+                $contact->name,
+                $contact->email,
+                $contact->subject,
+                $contact->message,
                 time()
             ));
             $return = $stmt ? true : false;
@@ -90,21 +86,20 @@ class ContactModel extends ContactValidator
     /**
      * UPDATE
      * 
-     * @return bool
+     * @return boolean
      */
-    private function update()
+    private function update(Contact $contact)
     {
-
         self::init();
         $return = false;
         if ($this->isOK()) {
             $sql = "UPDATE `" . self::$TABLE . "` SET `name`=?, `email`=?, `subject`=?, `message`=? WHERE `ID`=?";
             $stmt = self::$DBH->prepare($sql);
             $stmt->execute(array(
-                $this->name,
-                $this->email,
-                $this->subject,
-                $this->message,
+                $contact->name,
+                $contact->email,
+                $contact->subject,
+                $contact->message,
                 time(),
                 $this->ID
             ));
@@ -117,11 +112,10 @@ class ContactModel extends ContactValidator
     /**
      * DELETE
      * 
-     * @return bool
+     * @return boolean
      */
     private function delete()
     {
-
         self::init();
         $return = false;
         if ($this->isOK()) {
@@ -136,10 +130,9 @@ class ContactModel extends ContactValidator
         return $return;
     }
 
-    public static function findById($id)
+    public static function findById(int $id = 0)
     {
         self::init();
         return parent::findById($id);
     }
-
 }

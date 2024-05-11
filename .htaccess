@@ -1,4 +1,5 @@
 # BEGIN RWRITE
+
 # We redirect every call to the index file in our root
 # This means that we can safely check everything via the front controller
 <IfModule mod_rewrite.c>
@@ -6,4 +7,5 @@ RewriteEngine on
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^(.*)$ index.php [L]
 </IfModule>
+
 # END REWRITE

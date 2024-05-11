@@ -22,16 +22,13 @@
         <div class="l-col--8">
             <h4>Motivation</h4>
             <p>I'm a developer and can program pretty much everything. I just want everyone from my knowledge and can pass it on.</p>
-            <ul>
-                <li><a href="https://www.tnado.com" target="_blank">TNADO - SEO and AMP CMS</a></li>
-            </ul>
         </div>
         <div class="l-col--24">
             <div class="l-col--12 maa-copy">
-                <p>Copyright &copy;  <?php echo date("Y"); ?> by <a href="https://www.prod3v3loper.com" target="_blank">prod3v3loper</a></p>
+                <p>Copyright &copy; <?php echo date("Y"); ?> by <a href="https://www.prod3v3loper.com" target="_blank">prod3v3loper</a></p>
             </div>
             <div class="l-col--12 maa-copy">
-                <p>In cooperation with <a href="https://hyperl.de" target="_blank">Hyperly</a></p>
+                <p>Made with love by <a href="https://www.samet-tarim.de" target="_blank">Samet Tarim</a></p>
             </div>
         </div>
     </div>
