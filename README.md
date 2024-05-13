@@ -429,11 +429,22 @@ The core folder is to use for help with e.g. logging, session, js, templates, cs
 
 This one should not use in a real environment but unfortunately there is also something in real environments.
 
-# Contribute
+# ISSUE
 
-Please an [issue](https://github.com/prod3v3loper/php-mvc-professional/issues) if you
-think something could be improved. Please submit Pull Requests when ever
-possible.
+Please use the issue tab to request a:
+
+* Bug
+* Feature
+
+Choose template and report a bug or feature you want [issues](https://github.com/prod3v3loper/php-mvc-professional/issues).
+
+# CONTRIBUTE
+
+Please read the [contributing](https://github.com/prod3v3loper/php-mvc-professional/blob/master/.github/CONTRIBUTING.md) to contribute.
+
+# VULNERABILITY
+
+Please use the Security section for privately reporting a [vulnerability](https://github.com/prod3v3loper/php-mvc-professional/security).
 
 # Authors
 
